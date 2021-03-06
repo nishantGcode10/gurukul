@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "675137748057",
+    "project_id": "gurukul-269ff",
+    "storage_bucket": "gurukul-269ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675137748057:android:fc0e7593ec170439128548",
+        "android_client_info": {
+          "package_name": "com.techX.gurukul"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675137748057-v2jet62qg2kgjt2303msrpgjkdi47m2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADvl4rXMU72HHF_I0H1_oB7YvJsEEKH9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675137748057-v2jet62qg2kgjt2303msrpgjkdi47m2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675137748057:android:47c52e7289d90c63128548",
+        "android_client_info": {
+          "package_name": "com.techX.gurukul_beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675137748057-v2jet62qg2kgjt2303msrpgjkdi47m2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADvl4rXMU72HHF_I0H1_oB7YvJsEEKH9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675137748057-v2jet62qg2kgjt2303msrpgjkdi47m2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gurukul_beta/animations/fade.dart';
 //import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gurukul_beta/screens/login.dart';
+import 'package:gurukul_beta/screens/teacher_login.dart';
 
 class RegScreen extends StatefulWidget {
   @override
@@ -11,9 +14,39 @@ class RegScreen extends StatefulWidget {
 
 class _RegScreenState extends State<RegScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
   String pass;
+  String email;
   @override
   Widget build(BuildContext context) {
+    Future<void> _showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            //title: Text('AlertDialog Title'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('User Already exists'),
+                  Text('Try another email'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Retry'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     final passwordValidator = MultiValidator([
       RequiredValidator(errorText: 'password is required'),
       MinLengthValidator(8,
@@ -95,6 +128,9 @@ class _RegScreenState extends State<RegScreen> {
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
+                                        onChanged: (value) {
+                                          email = value;
+                                        },
                                         validator: EmailValidator(
                                             errorText:
                                                 'Enter a valid Email Address'),
@@ -159,11 +195,24 @@ class _RegScreenState extends State<RegScreen> {
                           FadeAnimation(
                               1.6,
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   if (_formKey.currentState.validate()) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text('Processing Data')));
+                                    try {
+                                      final newUser = await _auth
+                                          .createUserWithEmailAndPassword(
+                                              email: email, password: pass);
+                                      if (newUser != null) {
+                                        print("registered");
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        teacher_login()));
+                                      }
+                                    } catch (e) {
+                                      _showMyDialog();
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -174,7 +223,7 @@ class _RegScreenState extends State<RegScreen> {
                                       color: Colors.orange[900]),
                                   child: Center(
                                     child: Text(
-                                      "Login",
+                                      "Register",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
