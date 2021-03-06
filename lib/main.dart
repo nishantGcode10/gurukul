@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gurukul_beta/services/temeProvider.dart';
-//import 'demo.dart';
 import 'package:gurukul_beta/screens/login.dart';
 
 void main() {
@@ -25,9 +23,7 @@ class _HomeAppState extends State<HomeApp> {
     return MaterialApp(
       title: 'Flutter Tutorials',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      home: LoginScreen(),
+      home: login(),
     );
   }
 }
