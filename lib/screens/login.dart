@@ -5,7 +5,7 @@ import 'package:gurukul_beta/animations/fade.dart';
 //import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'regScreen.dart';
-
+import 'package:gurukul_beta/demo.dart';
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
@@ -66,6 +66,7 @@ class _loginState extends State<login> {
               SizedBox(height: 20),
               Expanded(
                 child: Container(
+                  padding: EdgeInsets.only(top: 10.0),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -179,7 +180,9 @@ class _loginState extends State<login> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              RegScreen()));
+                                              RegScreen(),
+                                        // HomePage(),
+                                      ));
                                 },
                                 child: Text(
                                   "Create Account",

@@ -17,6 +17,16 @@ class _RegScreenState extends State<RegScreen> {
   final _auth = FirebaseAuth.instance;
   String pass;
   String email;
+  String phone;
+  String rollno;
+  int radioValue = -1;
+
+  void _handleRadioValueChanged(int value) {
+    setState(() {
+      radioValue = value;
+      print(radioValue);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Future<void> _showMyDialog() async {
@@ -47,6 +57,14 @@ class _RegScreenState extends State<RegScreen> {
       );
     }
 
+    final phoneValidator = MultiValidator([
+      RequiredValidator(errorText: 'phone number is required'),
+      MinLengthValidator(1,
+          errorText: 'phone number must be at least 1 digits long'),
+      PatternValidator(r'(^(?:[+0]9)?[0-9]{10,12}$)',
+          errorText: 'phone number is not valid')
+    ]);
+
     final passwordValidator = MultiValidator([
       RequiredValidator(errorText: 'password is required'),
       MinLengthValidator(8,
@@ -54,14 +72,33 @@ class _RegScreenState extends State<RegScreen> {
       PatternValidator(r'(?=.*?[#?!@$%^&*-])',
           errorText: 'passwords must have at least one special character')
     ]);
+
+    final emailValidator = MultiValidator([
+      RequiredValidator(errorText: 'email is required'),
+      MinLengthValidator(1,
+          errorText: 'email must be at least 1 digits long'),
+      PatternValidator(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+          errorText: 'email is not valid')
+    ]);
+
+    final rollValidator = MultiValidator([
+      RequiredValidator(errorText: 'roll number is required',
+      ),
+      MinLengthValidator(1,
+          errorText: 'roll number must be at least 1 digits long'),
+    ]);
+
+
+
     return Scaffold(
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.orange[900],
-          Colors.orange[800],
-          Colors.orange[400]
+              Color(0xFF1B8F91),
+              Color(0xFF8CD9C0),
+              Color(0xFF8CD9C0),
+              Colors.white,
         ])),
         child: Form(
           key: _formKey,
@@ -93,6 +130,7 @@ class _RegScreenState extends State<RegScreen> {
               SizedBox(height: 20),
               Expanded(
                 child: Container(
+                  padding: EdgeInsets.only(top: 10.0),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -121,6 +159,7 @@ class _RegScreenState extends State<RegScreen> {
                                     ]),
                                 child: Column(
                                   children: <Widget>[
+                                    //email box
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -128,19 +167,21 @@ class _RegScreenState extends State<RegScreen> {
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
-                                        onChanged: (value) {
-                                          email = value;
+                                        obscureText: false,
+                                        onChanged: (val){
+                                          setState(() {
+                                            email = val;
+                                          });
                                         },
-                                        validator: EmailValidator(
-                                            errorText:
-                                                'Enter a valid Email Address'),
+                                        validator: emailValidator,
                                         decoration: InputDecoration(
                                             hintText: "Email",
                                             hintStyle:
-                                                TextStyle(color: Colors.grey),
+                                            TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                       ),
                                     ),
+                                    //password box
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -158,6 +199,7 @@ class _RegScreenState extends State<RegScreen> {
                                             border: InputBorder.none),
                                       ),
                                     ),
+                                    //match password
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -177,18 +219,82 @@ class _RegScreenState extends State<RegScreen> {
                                             border: InputBorder.none),
                                       ),
                                     ),
+                                    //phone number box
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: TextFormField(
+                                        obscureText: false,
+                                        onChanged: (val) => phone = val,
+                                        validator: phoneValidator,
+                                        decoration: InputDecoration(
+                                            hintText: "+9876543210",
+                                            hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
+                                    //role
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              new Radio(
+                                                  activeColor: Colors.green,
+                                                  value: 0,
+                                                  groupValue: radioValue,
+                                                  onChanged: _handleRadioValueChanged),
+                                              Text('Student'),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              new Radio<int>(
+                                                  activeColor: Colors.green,
+                                                  value: 1,
+                                                  groupValue: radioValue,
+                                                  onChanged: _handleRadioValueChanged),
+                                              Text('Teacher'),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    ),
+                                    //roll number
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: TextFormField(
+                                        obscureText: false,
+                                        onChanged: (val) => rollno = val,
+                                        validator: rollValidator,
+                                        decoration: InputDecoration(
+                                            hintText: "Roll number",
+                                            hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )),
                           SizedBox(
                             height: 40,
                           ),
-                          FadeAnimation(
-                              1.5,
-                              Text(
-                                "Forgot Password?",
-                                style: TextStyle(color: Colors.grey),
-                              )),
+                          //
                           SizedBox(
                             height: 40,
                           ),
@@ -220,7 +326,7 @@ class _RegScreenState extends State<RegScreen> {
                                   margin: EdgeInsets.symmetric(horizontal: 50),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(50),
-                                      color: Colors.orange[900]),
+                                      color: Color(0xFF53BEB3)),
                                   child: Center(
                                     child: Text(
                                       "Register",
@@ -234,60 +340,7 @@ class _RegScreenState extends State<RegScreen> {
                           SizedBox(
                             height: 50,
                           ),
-                          FadeAnimation(
-                              1.7,
-                              Text(
-                                "Continue with social media",
-                                style: TextStyle(color: Colors.grey),
-                              )),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: FadeAnimation(
-                                    1.8,
-                                    Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          color: Colors.blue),
-                                      child: Center(
-                                        child: Text(
-                                          "Facebook",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Expanded(
-                                child: FadeAnimation(
-                                    1.9,
-                                    Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          color: Colors.black),
-                                      child: Center(
-                                        child: Text(
-                                          "Github",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    )),
-                              )
-                            ],
-                          )
+                          //
                         ],
                       ),
                     ),
