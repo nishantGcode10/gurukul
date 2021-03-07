@@ -1,37 +1,40 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gurukul_beta/animations/fade.dart';
-//import 'package:email_validator/email_validator.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-import 'regScreen.dart';
-import 'teacher_dashboard.dart';
-class login extends StatefulWidget {
+class AddNewClass extends StatefulWidget {
   @override
-  _loginState createState() => _loginState();
+  _AddNewClassState createState() => _AddNewClassState();
 }
 
-class _loginState extends State<login> {
+class _AddNewClassState extends State<AddNewClass> {
   final _formKey = GlobalKey<FormState>();
+  double screenWidth, screenHeight;
+  String classname;
+  String subjectname;
+  Brightness statusIconColor = Brightness.dark;
   @override
   Widget build(BuildContext context) {
-    final passwordValidator = MultiValidator([
-      RequiredValidator(errorText: 'password is required'),
-      MinLengthValidator(8,
-          errorText: 'password must be at least 8 digits long'),
-      PatternValidator(r'(?=.*?[#?!@$%^&*-])',
-          errorText: 'passwords must have at least one special character')
-    ]);
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: statusIconColor,
+      ),
+    );
     return Scaffold(
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Color(0xFF1B8F91),
-          Color(0xFF8CD9C0),
-          Color(0xFF8CD9C0),
-          Colors.white,
-        ])),
+              Color(0xFF1B8F91),
+              Color(0xFF8CD9C0),
+              Color(0xFF8CD9C0),
+              Colors.white,
+            ])),
         child: Form(
           key: _formKey,
           child: Column(
@@ -49,12 +52,8 @@ class _loginState extends State<login> {
                         1,
                         Center(
                           child: Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.w800,
-                            ),
+                            "Add New Class",
+                            style: TextStyle(color: Colors.white, fontSize: 40),
                           ),
                         )),
                     SizedBox(
@@ -89,12 +88,14 @@ class _loginState extends State<login> {
                                     boxShadow: [
                                       BoxShadow(
                                           color:
-                                              Color.fromRGBO(225, 95, 27, .3),
-                                          blurRadius: 20,
+                                          Color.fromRGBO(225, 95, 27, .3),
+                                          blurRadius: 10,
                                           offset: Offset(0, 4))
-                                    ]),
+                                    ]
+                                ),
                                 child: Column(
                                   children: <Widget>[
+                                    //class name
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -102,16 +103,20 @@ class _loginState extends State<login> {
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
-                                        validator: EmailValidator(
-                                            errorText:
-                                                'Enter a valid Email Address'),
+                                        obscureText: false,
+                                        onChanged: (val){
+                                          setState(() {
+                                            classname = val;
+                                          });
+                                        },
                                         decoration: InputDecoration(
-                                            hintText: "Email",
+                                            hintText: "Class Name",
                                             hintStyle:
-                                                TextStyle(color: Colors.grey),
+                                            TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                       ),
                                     ),
+                                    //subject name box
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -119,35 +124,54 @@ class _loginState extends State<login> {
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
-                                        obscureText: true,
-                                        validator: passwordValidator,
+                                        onChanged: (val) => subjectname = val,
+
                                         decoration: InputDecoration(
-                                            hintText: "Password",
+                                            hintText: "Subject Name",
                                             hintStyle:
-                                                TextStyle(color: Colors.grey),
+                                            TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                       ),
                                     ),
+
+                                    //phone number box
+
                                   ],
                                 ),
                               )),
                           SizedBox(
                             height: 40,
                           ),
-
+                          //
                           SizedBox(
                             height: 40,
                           ),
                           FadeAnimation(
                               1.6,
                               GestureDetector(
-                                onTap: () {
-                                  if (_formKey.currentState.validate()) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text('Processing Data')));
-                                  }
+                                onTap: (){
+                                  Navigator.pop(context);
                                 },
+                                // onTap: () async {
+                                //   if (_formKey.currentState.validate()) {
+                                //     try {
+                                //       final newUser = await _auth
+                                //           .createUserWithEmailAndPassword(
+                                //           email: email, password: pass);
+                                //       if (newUser != null) {
+                                //         print("registered");
+                                //         Navigator.pushReplacement(
+                                //             context,
+                                //             MaterialPageRoute(
+                                //                 builder:
+                                //                     (BuildContext context) =>
+                                //                     TeacherDashboardPage()));
+                                //       }
+                                //     } catch (e) {
+                                //       _showMyDialog();
+                                //     }
+                                //   }
+                                // },
                                 child: Container(
                                   height: 50,
                                   margin: EdgeInsets.symmetric(horizontal: 50),
@@ -162,10 +186,12 @@ class _loginState extends State<login> {
                                       color: Color(0xFF53BEB3)),
                                   child: Center(
                                     child: Text(
-                                      "Login",
+                                      "Add",
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                        fontSize: 25.0,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -173,23 +199,7 @@ class _loginState extends State<login> {
                           SizedBox(
                             height: 50,
                           ),
-                          FadeAnimation(
-                              1.7,
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                          RegScreen(),
-                                      ));
-                                },
-                                child: Text(
-                                  "Create Account",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              )),
-
+                          //
                         ],
                       ),
                     ),

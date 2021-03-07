@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gurukul_beta/animations/fade.dart';
+import 'add_class.dart';
 
 final Color backgroundColor = Color(0xFF2d2d39);
 
@@ -33,7 +35,6 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
   double mainBorderRadius = 0;
   Brightness statusIconColor = Brightness.dark;
 
-
   List<classroomDetails> myclassroomList = [
     new classroomDetails(
       name: 'IX-B',
@@ -60,8 +61,6 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
       subject: 'Hindi',
     ),
   ];
-
-
 
   @override
   void initState() {
@@ -203,14 +202,23 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
                         iconData: Icons.account_balance_wallet,
                         active: true,
                       ),
-
                       menuItem(
                         title: "Update Profile",
                         iconData: Icons.account_box_rounded,
                       ),
-                      menuItem(
-                        title: "Add Class",
-                        iconData: Icons.add_circle,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    AddNewClass(),
+                              ));
+                        },
+                        child: menuItem(
+                          title: "Add Class",
+                          iconData: Icons.add_circle,
+                        ),
                       ),
                     ],
                   ),
@@ -455,8 +463,8 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
   }
 
   Widget classroomList(
-      List<classroomDetails> classList,
-      ) {
+    List<classroomDetails> classList,
+  ) {
     return ListView(
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
@@ -530,131 +538,137 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
           color: Colors.white,
           child: SafeArea(
               child: Stack(
+            children: <Widget>[
+              ListView(
+                padding: EdgeInsets.all(0),
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
                 children: <Widget>[
-                  ListView(
-                    padding: EdgeInsets.all(0),
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 5,
-                          bottom: 50,
-                        ),
-                        // decoration: BoxDecoration(
-                        //   color: Colors.white70,
-                        //   borderRadius: BorderRadius.only(
-                        //     bottomLeft: Radius.circular(25),
-                        //     bottomRight: Radius.circular(25),
-                        //   ),
-                        // ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16, right: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.drag_handle,
-                                      color: Colors.black87,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        if (isCollapsed) {
-                                          mainBorderRadius = 30;
-                                          statusIconColor = Brightness.light;
-                                          _controller.forward();
-                                        } else {
-                                          _controller.reverse();
-                                          mainBorderRadius = 0;
-                                          statusIconColor = Brightness.dark;
-                                        }
-                                        isCollapsed = !isCollapsed;
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    "My Class",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.add_circle_outline,
-                                      color: Color(0xff1c7bfd),
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                ],
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 5,
+                      bottom: 50,
+                    ),
+                    // decoration: BoxDecoration(
+                    //   color: Colors.white70,
+                    //   borderRadius: BorderRadius.only(
+                    //     bottomLeft: Radius.circular(25),
+                    //     bottomRight: Radius.circular(25),
+                    //   ),
+                    // ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.drag_handle,
+                                  color: Colors.black87,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if (isCollapsed) {
+                                      mainBorderRadius = 30;
+                                      statusIconColor = Brightness.light;
+                                      _controller.forward();
+                                    } else {
+                                      _controller.reverse();
+                                      mainBorderRadius = 0;
+                                      statusIconColor = Brightness.dark;
+                                    }
+                                    isCollapsed = !isCollapsed;
+                                  });
+                                },
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            //
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xfff4faff),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(60),
-                              topRight: Radius.circular(60)),
-                        ),
-                        padding: const EdgeInsets.only(bottom: 10, top: 15.0, left: 5.0),
-                        child: ListView(
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          children: <Widget>[
-                            SizedBox(height: 15),
-                            Container(
-
-                              padding: EdgeInsets.only(
-                                bottom: 16,
-                                left: 16,
-                                right: 16,
+                              Text(
+                                "My Class",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              child: ListView(
-                                physics: ClampingScrollPhysics(),
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                shrinkWrap: true,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "Classrooms",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-
-                                    ],
-                                  ),
-                                  classroomList(myclassroomList),
-                                  // classroomList(
-                                  //     yesterdayTransactionsList, 'Yesterday',
-                                  //     lastElement: true),
-                                ],
+                              IconButton(
+                                icon: Icon(
+                                  Icons.add_circle_outline,
+                                  color: Color(0xff1c7bfd),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            AddNewClass(),
+                                      ));
+                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 10),
+                        //
+                      ],
+                    ),
                   ),
-                  bottomBar(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xfff4faff),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(60),
+                          topRight: Radius.circular(60)),
+                    ),
+                    padding:
+                        const EdgeInsets.only(bottom: 10, top: 15.0, left: 5.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      children: <Widget>[
+                        SizedBox(height: 15),
+                        Container(
+                          padding: EdgeInsets.only(
+                            bottom: 16,
+                            left: 16,
+                            right: 16,
+                          ),
+                          child: ListView(
+                            physics: ClampingScrollPhysics(),
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            shrinkWrap: true,
+                            children: <Widget>[
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Classrooms",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              classroomList(myclassroomList),
+                              // classroomList(
+                              //     yesterdayTransactionsList, 'Yesterday',
+                              //     lastElement: true),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              )),
+              ),
+              bottomBar(),
+            ],
+          )),
         ),
       ),
     );
