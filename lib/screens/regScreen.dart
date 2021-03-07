@@ -6,6 +6,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gurukul_beta/screens/login.dart';
 //import 'package:gurukul_beta/screens/teacher_login.dart';
+import 'teacher_dashboard.dart';
 
 class RegScreen extends StatefulWidget {
   @override
@@ -314,7 +315,7 @@ class _RegScreenState extends State<RegScreen> {
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
-                                                        login()));
+                                                        TeacherDashboardPage()));
                                       }
                                     } catch (e) {
                                       _showMyDialog();

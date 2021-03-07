@@ -5,7 +5,7 @@ import 'package:gurukul_beta/animations/fade.dart';
 //import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'regScreen.dart';
-import 'package:gurukul_beta/demo.dart';
+import 'teacher_dashboard.dart';
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
@@ -134,12 +134,7 @@ class _loginState extends State<login> {
                           SizedBox(
                             height: 40,
                           ),
-                          FadeAnimation(
-                              1.5,
-                              Text(
-                                "Forgot Password?",
-                                style: TextStyle(color: Colors.grey),
-                              )),
+
                           SizedBox(
                             height: 40,
                           ),
@@ -180,8 +175,7 @@ class _loginState extends State<login> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              RegScreen(),
-                                        // HomePage(),
+                                          RegScreen(),
                                       ));
                                 },
                                 child: Text(
@@ -189,54 +183,7 @@ class _loginState extends State<login> {
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               )),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: FadeAnimation(
-                                    1.8,
-                                    Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          color: Colors.blue),
-                                      child: Center(
-                                        child: Text(
-                                          "Facebook",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Expanded(
-                                child: FadeAnimation(
-                                    1.9,
-                                    Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          color: Colors.black),
-                                      child: Center(
-                                        child: Text(
-                                          "Github",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    )),
-                              )
-                            ],
-                          )
+
                         ],
                       ),
                     ),
