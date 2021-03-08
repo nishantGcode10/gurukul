@@ -5,7 +5,9 @@ import 'package:gurukul_beta/animations/fade.dart';
 //import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'regScreen.dart';
-import 'package:gurukul_beta/demo.dart';
+
+//import 'package:gurukul_beta/demo.dart';
+
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
@@ -179,8 +181,8 @@ class _loginState extends State<login> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              RegScreen(),
+                                        builder: (BuildContext context) =>
+                                            RegScreen(),
                                         // HomePage(),
                                       ));
                                 },
