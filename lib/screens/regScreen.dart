@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gurukul_beta/animations/fade.dart';
 //import 'package:email_validator/email_validator.dart';
@@ -7,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gurukul_beta/screens/login.dart';
 //import 'package:gurukul_beta/screens/teacher_login.dart';
 import 'teacher_dashboard.dart';
-
+import 'package:cupertino_icons/cupertino_icons.dart';
 class RegScreen extends StatefulWidget {
   @override
   _RegScreenState createState() => _RegScreenState();
@@ -21,7 +22,10 @@ class _RegScreenState extends State<RegScreen> {
   String phone;
   String rollno;
   int radioValue = -1;
-
+  IconData viewpass1 = CupertinoIcons.lock_open;
+  IconData viewpass2 = CupertinoIcons.lock_open;
+  bool pass1 = true;
+  bool pass2 = true;
   void _handleRadioValueChanged(int value) {
     setState(() {
       radioValue = value;
@@ -189,16 +193,39 @@ class _RegScreenState extends State<RegScreen> {
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: TextFormField(
-                                        obscureText: true,
-                                        onChanged: (val) => pass = val,
-                                        validator: passwordValidator,
-                                        decoration: InputDecoration(
-                                            hintText: "Password",
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
-                                            border: InputBorder.none),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              obscureText: pass1,
+                                              onChanged: (val) => pass = val,
+                                              validator: passwordValidator,
+                                              decoration: InputDecoration(
+                                                  hintText: "Password",
+                                                  hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                                  border: InputBorder.none),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: (){
+                                              setState(() {
+                                                if(pass1)
+                                                {viewpass1 = CupertinoIcons.lock;
+                                                pass1 = !pass1;}else
+                                                {
+                                                  viewpass1 = CupertinoIcons.lock_open;
+                                                  pass1 = !pass1;
+                                                }
+                                              });
+                                            },
+                                            child: Icon(
+                                              viewpass1,
+                                            ),
+                                          ),
+                                        ],
                                       ),
+
                                     ),
                                     //match password
                                     Container(
@@ -207,17 +234,39 @@ class _RegScreenState extends State<RegScreen> {
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: TextFormField(
-                                        obscureText: true,
-                                        validator: (val) => MatchValidator(
-                                                errorText:
-                                                    'passwords do not match')
-                                            .validateMatch(val, pass),
-                                        decoration: InputDecoration(
-                                            hintText: "Confirm Password",
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
-                                            border: InputBorder.none),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              obscureText: pass2,
+                                              validator: (val) => MatchValidator(
+                                                  errorText:
+                                                  'passwords do not match')
+                                                  .validateMatch(val, pass),
+                                              decoration: InputDecoration(
+                                                  hintText: "Confirm Password",
+                                                  hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                                  border: InputBorder.none),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: (){
+                                              setState(() {
+                                                if(pass2)
+                                                  {viewpass2 = CupertinoIcons.lock;
+                                                pass2 = !pass2;}else
+                                                  {
+                                                    viewpass2 = CupertinoIcons.lock_open;
+                                                    pass2 = !pass2;
+                                                  }
+                                              });
+                                            },
+                                            child: Icon(
+                                              viewpass2,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                     //phone number box
