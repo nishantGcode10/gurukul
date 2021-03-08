@@ -6,6 +6,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gurukul_beta/screens/login.dart';
 //import 'package:gurukul_beta/screens/teacher_login.dart';
+import 'teacher_dashboard.dart';
 
 class RegScreen extends StatefulWidget {
   @override
@@ -155,7 +156,7 @@ class _RegScreenState extends State<RegScreen> {
                                           color:
                                               Color.fromRGBO(225, 95, 27, .3),
                                           blurRadius: 20,
-                                          offset: Offset(0, 10))
+                                          offset: Offset(0, 4))
                                     ]),
                                 child: Column(
                                   children: <Widget>[
@@ -314,7 +315,7 @@ class _RegScreenState extends State<RegScreen> {
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
-                                                        login()));
+                                                        TeacherDashboardPage()));
                                       }
                                     } catch (e) {
                                       _showMyDialog();
@@ -325,6 +326,12 @@ class _RegScreenState extends State<RegScreen> {
                                   height: 50,
                                   margin: EdgeInsets.symmetric(horizontal: 50),
                                   decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xFF8CD9C0),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 10))
+                                      ],
                                       borderRadius: BorderRadius.circular(50),
                                       color: Color(0xFF53BEB3)),
                                   child: Center(
