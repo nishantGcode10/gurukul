@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gurukul_beta/animations/fade.dart';
+import 'teacher_dashboard.dart';
 class AddNewClass extends StatefulWidget {
   @override
   _AddNewClassState createState() => _AddNewClassState();
 }
 
 class _AddNewClassState extends State<AddNewClass> {
+  String name="User", email="User@gmail.com";
+  Color activeColor = Colors.black;
+  Color inactiveColor = Colors.grey[700];
   final _formKey = GlobalKey<FormState>();
   double screenWidth, screenHeight;
   String classname;
@@ -26,6 +30,94 @@ class _AddNewClassState extends State<AddNewClass> {
       ),
     );
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF1B8F91),
+        title: Text("Classroom", style: TextStyle(fontSize: 30.0),),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xFF1B8F91) ,
+              ),
+              accountName: Text(name, style: TextStyle(fontSize: 20.0),),
+              accountEmail: Text(email),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Color(0xFF1B8F91),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage('assets/dp.jpg')),
+                  ),
+                ),
+              ),
+            ),
+            ListTile(
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => TeacherDashBoardPage()));
+              },
+              leading: Icon(
+                Icons.message,
+                color: inactiveColor,
+              ),
+              title: Text(
+                "DashBoard",
+                style: TextStyle(
+                  color: inactiveColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.account_box_rounded,
+                color: inactiveColor,
+              ),
+              title: Text(
+                "Profile",
+                style: TextStyle(
+                  color: inactiveColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.add_circle,
+                color: activeColor,
+              ),
+              title: Text(
+                "Add Class",
+                style: TextStyle(
+                  color: activeColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.exit_to_app,
+                color: inactiveColor,
+              ),
+              title: Text(
+                "Sign Out",
+                style: TextStyle(
+                  color: inactiveColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(

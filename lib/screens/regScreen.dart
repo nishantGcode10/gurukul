@@ -2,13 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gurukul_beta/animations/fade.dart';
-//import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gurukul_beta/screens/login.dart';
-//import 'package:gurukul_beta/screens/teacher_login.dart';
+// import 'package:gurukul_beta/demo.dart';
 import 'teacher_dashboard.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 class RegScreen extends StatefulWidget {
   @override
   _RegScreenState createState() => _RegScreenState();
@@ -364,7 +361,7 @@ class _RegScreenState extends State<RegScreen> {
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
-                                                        TeacherDashboardPage()));
+                                                        TeacherDashBoardPage()));
                                       }
                                     } catch (e) {
                                       _showMyDialog();

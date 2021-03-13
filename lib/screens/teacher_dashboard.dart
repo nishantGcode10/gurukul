@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:gurukul_beta/animations/fade.dart';
 import 'add_class.dart';
 
-final Color backgroundColor = Color(0xFF2d2d39);
-
 class classroomDetails {
   final String name;
   final String subject;
@@ -16,24 +14,17 @@ class classroomDetails {
   });
 }
 
-class TeacherDashboardPage extends StatefulWidget {
+class TeacherDashBoardPage extends StatefulWidget {
   @override
-  _TeacherDashboardPageState createState() => _TeacherDashboardPageState();
+  _TeacherDashBoardPageState createState() => _TeacherDashBoardPageState();
 }
 
-class _TeacherDashboardPageState extends State<TeacherDashboardPage>
-    with SingleTickerProviderStateMixin {
-  bool isCollapsed = true;
-  double screenWidth, screenHeight;
-  final Duration duration = const Duration(milliseconds: 200);
-  AnimationController _controller;
-  Animation<double> _scaleAnimation;
-  Animation<double> _menuScaleAnimation;
-  Animation<Offset> _slideAnimation;
-  String username = "User";
-
-  double mainBorderRadius = 0;
-  Brightness statusIconColor = Brightness.dark;
+class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
+  String name = "User", email = "user@gmail.com";
+  Color activeColor = Colors.black;
+  Color inactiveColor = Colors.grey[700];
+  bool dashboardMenu = true, profileMenu = false, addClassMenu = false;
+  double screenHeight, screenWidth;
 
   List<classroomDetails> myclassroomList = [
     new classroomDetails(
@@ -61,254 +52,6 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
       subject: 'Hindi',
     ),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this, duration: duration);
-    _scaleAnimation = Tween<double>(begin: 1, end: 0.7).animate(_controller);
-    _menuScaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1,
-    ).animate(_controller);
-    _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
-        .animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Widget menuItem({
-    IconData iconData,
-    String title,
-    bool active: false,
-  }) {
-    return SizedBox(
-      width: 0.5 * screenWidth,
-      child: Container(
-        margin: EdgeInsets.only(
-          bottom: 20,
-        ),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Icon(
-                iconData,
-                color: (active) ? Colors.white : Colors.grey,
-                size: 22,
-              ),
-            ),
-            Expanded(
-              flex: 14,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(
-                  "$title",
-                  style: TextStyle(
-                    color: (active) ? Colors.white : Colors.grey,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget menu(context) {
-    return SlideTransition(
-      position: _slideAnimation,
-      child: ScaleTransition(
-        scale: _menuScaleAnimation,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, top: 40),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        width: 0.3 * screenWidth,
-                        margin: EdgeInsets.only(
-                          top: 50,
-                          bottom: 10,
-                        ),
-                        child: ListView(
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          children: <Widget>[
-                            SizedBox(
-                              height: 0.3 * screenWidth,
-                              width: 0.3 * screenWidth,
-                              child: Container(
-                                alignment: Alignment.topLeft,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: AssetImage('assets/dp.jpg')),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: ListView(
-                          padding: EdgeInsets.all(0),
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          children: <Widget>[
-                            Text(
-                              '$username',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            //
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: <Widget>[
-                      menuItem(
-                        title: "Dashboard",
-                        iconData: Icons.account_balance_wallet,
-                        active: true,
-                      ),
-                      menuItem(
-                        title: "Update Profile",
-                        iconData: Icons.account_box_rounded,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    AddNewClass(),
-                              ));
-                        },
-                        child: menuItem(
-                          title: "Add Class",
-                          iconData: Icons.add_circle,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 70,
-                ),
-                menuItem(
-                  title: "Logout",
-                  iconData: Icons.exit_to_app,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget bottomBar() {
-    return Align(
-      alignment: Alignment(-1, 1),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-        height: 70,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black12,
-            width: 1,
-          ),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-                flex: 1,
-                child: IconButton(
-                  highlightColor: Colors.red,
-                  splashColor: Colors.greenAccent,
-                  icon: Icon(
-                    Icons.home,
-                    color: Color(0xffa1a5b5),
-                  ),
-                  iconSize: 28,
-                  onPressed: () {},
-                )),
-            //
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                icon: Icon(
-                  Icons.show_chart,
-                  color: Color(0xffa1a5b5),
-                ),
-                iconSize: 28,
-                onPressed: () {},
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                iconSize: 28,
-                icon: Icon(
-                  Icons.notifications_none,
-                  color: Color(0xffa1a5b5),
-                ),
-                onPressed: () {},
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                iconSize: 28,
-                icon: Icon(
-                  Icons.person_outline,
-                  color: Color(0xffa1a5b5),
-                ),
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
   Widget classroomList(
     List<classroomDetails> classList,
   ) {
@@ -337,28 +80,36 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
                 ],
               ),
               // padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-              child: ListTile(
-                contentPadding: EdgeInsets.fromLTRB(25, 15, 25, 15),
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      CupertinoIcons.time,
-                    ),
-                  ],
-                ),
-                title: Text(
-                  "${_classroom.name}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/tile${index%5}.jpg'),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                subtitle: Text(
-                  "${_classroom.subject}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 25.0,
+                child: ListTile(
+                  contentPadding: EdgeInsets.fromLTRB(25, 15, 25, 15),
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.watch_later_outlined,
+                      ),
+                    ],
+                  ),
+                  title: Text(
+                    "${_classroom.name}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "${_classroom.subject}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25.0,
+                    ),
                   ),
                 ),
               ),
@@ -370,177 +121,201 @@ class _TeacherDashboardPageState extends State<TeacherDashboardPage>
     );
   }
 
-  Widget dashboard(context) {
-    return AnimatedPositioned(
-      duration: duration,
-      top: 0,
-      bottom: 0,
-      left: isCollapsed ? 0 : 0.5 * screenWidth,
-      width: screenWidth,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Material(
-          borderRadius: BorderRadius.circular(mainBorderRadius),
-          animationDuration: duration,
-          color: Colors.white,
-          child: SafeArea(
-              child: Stack(
-            children: <Widget>[
-              ListView(
-                padding: EdgeInsets.all(0),
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 5,
-                      bottom: 50,
-                    ),
-                    // decoration: BoxDecoration(
-                    //   color: Colors.white70,
-                    //   borderRadius: BorderRadius.only(
-                    //     bottomLeft: Radius.circular(25),
-                    //     bottomRight: Radius.circular(25),
-                    //   ),
-                    // ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.drag_handle,
-                                  color: Colors.black87,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    if (isCollapsed) {
-                                      mainBorderRadius = 30;
-                                      statusIconColor = Brightness.light;
-                                      _controller.forward();
-                                    } else {
-                                      _controller.reverse();
-                                      mainBorderRadius = 0;
-                                      statusIconColor = Brightness.dark;
-                                    }
-                                    isCollapsed = !isCollapsed;
-                                  });
-                                },
-                              ),
-                              Text(
-                                "My Class",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.add_circle_outline,
-                                  color: Color(0xff1c7bfd),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            AddNewClass(),
-                                      ));
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        //
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xfff4faff),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60)),
-                    ),
-                    padding:
-                        const EdgeInsets.only(bottom: 10, top: 15.0, left: 5.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      children: <Widget>[
-                        SizedBox(height: 15),
-                        Container(
-                          padding: EdgeInsets.only(
-                            bottom: 16,
-                            left: 16,
-                            right: 16,
-                          ),
-                          child: ListView(
-                            physics: ClampingScrollPhysics(),
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            shrinkWrap: true,
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    "Classrooms",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              classroomList(myclassroomList),
-                              // classroomList(
-                              //     yesterdayTransactionsList, 'Yesterday',
-                              //     lastElement: true),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              bottomBar(),
-            ],
-          )),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: statusIconColor,
-      ),
-    );
     return Scaffold(
-      backgroundColor: Color(0xff343442),
-      body: Stack(
-        children: <Widget>[
-          menu(context),
-          dashboard(context),
-        ],
+      appBar: AppBar(
+        backgroundColor: Color(0xFF1B8F91),
+        title: Text(
+          "Classroom",
+          style: TextStyle(fontSize: 30.0),
+        ),
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xFF1B8F91),
+              ),
+              accountName: Text(
+                name,
+                style: TextStyle(fontSize: 20.0),
+              ),
+              accountEmail: Text(email),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:  Color(0xFF1B8F91),
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: AssetImage('assets/dp.jpg')),
+                  ),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.message,
+                color: activeColor,
+              ),
+              title: Text(
+                "DashBoard",
+                style: TextStyle(
+                  color: activeColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.account_box_rounded,
+                color: inactiveColor,
+              ),
+              title: Text(
+                "Profile",
+                style: TextStyle(
+                  color: inactiveColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => AddNewClass()));
+              },
+              leading: Icon(
+                Icons.add_circle,
+                color: inactiveColor,
+              ),
+              title: Text(
+                "Add Class",
+                style: TextStyle(
+                  color: inactiveColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.exit_to_app,
+                color: inactiveColor,
+              ),
+              title: Text(
+                "Sign Out",
+                style: TextStyle(
+                  color: inactiveColor,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+          child: Stack(
+        children: <Widget>[
+          ListView(
+            padding: EdgeInsets.all(0),
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(
+                  top: 5,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            "My Class",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) => AddNewClass()));
+                            },
+                            icon: Icon(
+                              Icons.add_circle_outline,
+                              color: Color(0xff1c7bfd),
+                            ),
+                            // onPressed: () {
+                            //   Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (BuildContext context) =>
+                            //             AddNewClass(),
+                            //       ));
+                            // },
+                          ),
+                        ],
+                      ),
+                    ),
+                    // SizedBox(height: 10),
+                    //
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(60),
+                      topRight: Radius.circular(60)),
+                ),
+                padding: const EdgeInsets.only(bottom: 10, left: 5.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  children: <Widget>[
+                    // SizedBox(height: 15),
+                    Container(
+                      padding: EdgeInsets.only(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                      ),
+                      child: ListView(
+                        physics: ClampingScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[],
+                          ),
+                          classroomList(myclassroomList),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      )),
     );
   }
 }
