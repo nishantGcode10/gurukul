@@ -24,7 +24,7 @@ class _HomeAppState extends State<HomeApp> {
     return MaterialApp(
       title: 'Flutter Tutorials',
       debugShowCheckedModeBanner: false,
-      home: TeacherDashBoardPage(),
+      home: login(),
     );
   }
 }
