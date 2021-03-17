@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gurukul_beta/screens/login.dart';
-
+// import 'demo.dart';
+import 'screens/teacher_dashboard.dart';
 void main() {
   runApp(
     HomeApp(),
