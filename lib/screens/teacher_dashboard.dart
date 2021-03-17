@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gurukul_beta/animations/fade.dart';
+import 'package:gurukul_beta/screens/login.dart';
 import 'add_class.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class classroomDetails {
   final String name;
@@ -20,8 +22,29 @@ class TeacherDashBoardPage extends StatefulWidget {
 }
 
 class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
-  String name = "User", email = "user@gmail.com";
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseUser currUser;
+  String name = "User", email = "currUser.email";
   Color activeColor = Colors.black;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        currUser = user;
+        email = currUser.email;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Color inactiveColor = Colors.grey[700];
   bool dashboardMenu = true, profileMenu = false, addClassMenu = false;
   double screenHeight, screenWidth;
@@ -83,7 +106,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/tile${index%5}.jpg'),
+                    image: AssetImage('assets/tile${index % 5}.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -150,7 +173,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                 backgroundColor: Colors.blue,
                 child: Container(
                   decoration: BoxDecoration(
-                    color:  Color(0xFF1B8F91),
+                    color: Color(0xFF1B8F91),
                     shape: BoxShape.circle,
                     image: DecorationImage(image: AssetImage('assets/dp.jpg')),
                   ),
@@ -204,17 +227,26 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                 ),
               ),
             ),
-            ListTile(
-              leading: Icon(
-                Icons.exit_to_app,
-                color: inactiveColor,
-              ),
-              title: Text(
-                "Sign Out",
-                style: TextStyle(
+            GestureDetector(
+              onTap: () {
+                _auth.signOut();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((BuildContext context) => login())));
+              },
+              child: ListTile(
+                leading: Icon(
+                  Icons.exit_to_app,
                   color: inactiveColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
+                ),
+                title: Text(
+                  "Sign Out",
+                  style: TextStyle(
+                    color: inactiveColor,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
@@ -251,10 +283,11 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                             ),
                           ),
                           IconButton(
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.of(context).pop();
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (BuildContext context) => AddNewClass()));
+                                  builder: (BuildContext context) =>
+                                      AddNewClass()));
                             },
                             icon: Icon(
                               Icons.add_circle_outline,

@@ -6,6 +6,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:gurukul_beta/demo.dart';
 import 'teacher_dashboard.dart';
+
 class RegScreen extends StatefulWidget {
   @override
   _RegScreenState createState() => _RegScreenState();
@@ -29,6 +30,7 @@ class _RegScreenState extends State<RegScreen> {
       print(radioValue);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     Future<void> _showMyDialog() async {
@@ -77,30 +79,29 @@ class _RegScreenState extends State<RegScreen> {
 
     final emailValidator = MultiValidator([
       RequiredValidator(errorText: 'email is required'),
-      MinLengthValidator(1,
-          errorText: 'email must be at least 1 digits long'),
-      PatternValidator(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+      MinLengthValidator(1, errorText: 'email must be at least 1 digits long'),
+      PatternValidator(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
           errorText: 'email is not valid')
     ]);
 
     final rollValidator = MultiValidator([
-      RequiredValidator(errorText: 'roll number is required',
+      RequiredValidator(
+        errorText: 'roll number is required',
       ),
       MinLengthValidator(1,
           errorText: 'roll number must be at least 1 digits long'),
     ]);
-
-
 
     return Scaffold(
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-              Color(0xFF1B8F91),
-              Color(0xFF8CD9C0),
-              Color(0xFF8CD9C0),
-              Colors.white,
+          Color(0xFF1B8F91),
+          Color(0xFF8CD9C0),
+          Color(0xFF8CD9C0),
+          Colors.white,
         ])),
         child: Form(
           key: _formKey,
@@ -170,7 +171,7 @@ class _RegScreenState extends State<RegScreen> {
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
                                         obscureText: false,
-                                        onChanged: (val){
+                                        onChanged: (val) {
                                           setState(() {
                                             email = val;
                                           });
@@ -179,7 +180,7 @@ class _RegScreenState extends State<RegScreen> {
                                         decoration: InputDecoration(
                                             hintText: "Email",
                                             hintStyle:
-                                            TextStyle(color: Colors.grey),
+                                                TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                       ),
                                     ),
@@ -199,19 +200,21 @@ class _RegScreenState extends State<RegScreen> {
                                               validator: passwordValidator,
                                               decoration: InputDecoration(
                                                   hintText: "Password",
-                                                  hintStyle:
-                                                  TextStyle(color: Colors.grey),
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.grey),
                                                   border: InputBorder.none),
                                             ),
                                           ),
                                           GestureDetector(
-                                            onTap: (){
+                                            onTap: () {
                                               setState(() {
-                                                if(pass1)
-                                                {viewpass1 = CupertinoIcons.lock;
-                                                pass1 = !pass1;}else
-                                                {
-                                                  viewpass1 = CupertinoIcons.lock_open;
+                                                if (pass1) {
+                                                  viewpass1 =
+                                                      CupertinoIcons.lock;
+                                                  pass1 = !pass1;
+                                                } else {
+                                                  viewpass1 =
+                                                      CupertinoIcons.lock_open;
                                                   pass1 = !pass1;
                                                 }
                                               });
@@ -222,7 +225,6 @@ class _RegScreenState extends State<RegScreen> {
                                           ),
                                         ],
                                       ),
-
                                     ),
                                     //match password
                                     Container(
@@ -237,26 +239,28 @@ class _RegScreenState extends State<RegScreen> {
                                             child: TextFormField(
                                               obscureText: pass2,
                                               validator: (val) => MatchValidator(
-                                                  errorText:
-                                                  'passwords do not match')
+                                                      errorText:
+                                                          'passwords do not match')
                                                   .validateMatch(val, pass),
                                               decoration: InputDecoration(
                                                   hintText: "Confirm Password",
-                                                  hintStyle:
-                                                  TextStyle(color: Colors.grey),
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.grey),
                                                   border: InputBorder.none),
                                             ),
                                           ),
                                           GestureDetector(
-                                            onTap: (){
+                                            onTap: () {
                                               setState(() {
-                                                if(pass2)
-                                                  {viewpass2 = CupertinoIcons.lock;
-                                                pass2 = !pass2;}else
-                                                  {
-                                                    viewpass2 = CupertinoIcons.lock_open;
-                                                    pass2 = !pass2;
-                                                  }
+                                                if (pass2) {
+                                                  viewpass2 =
+                                                      CupertinoIcons.lock;
+                                                  pass2 = !pass2;
+                                                } else {
+                                                  viewpass2 =
+                                                      CupertinoIcons.lock_open;
+                                                  pass2 = !pass2;
+                                                }
                                               });
                                             },
                                             child: Icon(
@@ -280,43 +284,45 @@ class _RegScreenState extends State<RegScreen> {
                                         decoration: InputDecoration(
                                             hintText: "+9876543210",
                                             hintStyle:
-                                            TextStyle(color: Colors.grey),
+                                                TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                       ),
                                     ),
                                     //role
                                     Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              new Radio(
-                                                  activeColor: Colors.green,
-                                                  value: 0,
-                                                  groupValue: radioValue,
-                                                  onChanged: _handleRadioValueChanged),
-                                              Text('Student'),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              new Radio<int>(
-                                                  activeColor: Colors.green,
-                                                  value: 1,
-                                                  groupValue: radioValue,
-                                                  onChanged: _handleRadioValueChanged),
-                                              Text('Teacher'),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    ),
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                new Radio(
+                                                    activeColor: Colors.green,
+                                                    value: 0,
+                                                    groupValue: radioValue,
+                                                    onChanged:
+                                                        _handleRadioValueChanged),
+                                                Text('Student'),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                new Radio<int>(
+                                                    activeColor: Colors.green,
+                                                    value: 1,
+                                                    groupValue: radioValue,
+                                                    onChanged:
+                                                        _handleRadioValueChanged),
+                                                Text('Teacher'),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
                                     //roll number
                                     Container(
                                       padding: EdgeInsets.all(10),
@@ -331,7 +337,7 @@ class _RegScreenState extends State<RegScreen> {
                                         decoration: InputDecoration(
                                             hintText: "Roll number",
                                             hintStyle:
-                                            TextStyle(color: Colors.grey),
+                                                TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                       ),
                                     ),
@@ -359,9 +365,9 @@ class _RegScreenState extends State<RegScreen> {
                                         Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        TeacherDashBoardPage()));
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    TeacherDashBoardPage()));
                                       }
                                     } catch (e) {
                                       _showMyDialog();

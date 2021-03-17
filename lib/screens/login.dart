@@ -5,7 +5,7 @@ import 'package:gurukul_beta/animations/fade.dart';
 //import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'regScreen.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:gurukul_beta/demo.dart';
 
 import 'teacher_dashboard.dart';
@@ -17,6 +17,17 @@ class login extends StatefulWidget {
 
 class _loginState extends State<login> {
   final _formKey = GlobalKey<FormState>();
+  var radioValue = -1;
+  String pass;
+  String email;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  void _handleRadioValueChanged(var value) {
+    setState(() {
+      radioValue = value;
+      print(radioValue);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final passwordValidator = MultiValidator([
@@ -106,6 +117,9 @@ class _loginState extends State<login> {
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
+                                        onChanged: (value) {
+                                          email = value;
+                                        },
                                         validator: EmailValidator(
                                             errorText:
                                                 'Enter a valid Email Address'),
@@ -124,6 +138,9 @@ class _loginState extends State<login> {
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
                                         obscureText: true,
+                                        onChanged: (value) {
+                                          pass = value;
+                                        },
                                         validator: passwordValidator,
                                         decoration: InputDecoration(
                                             hintText: "Password",
@@ -132,6 +149,40 @@ class _loginState extends State<login> {
                                             border: InputBorder.none),
                                       ),
                                     ),
+                                    Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                new Radio(
+                                                    activeColor: Colors.green,
+                                                    value: 0,
+                                                    groupValue: radioValue,
+                                                    onChanged:
+                                                        _handleRadioValueChanged),
+                                                Text('Student'),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                new Radio<int>(
+                                                    activeColor: Colors.green,
+                                                    value: 1,
+                                                    groupValue: radioValue,
+                                                    onChanged:
+                                                        _handleRadioValueChanged),
+                                                Text('Teacher'),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
                                   ],
                                 ),
                               )),
@@ -144,11 +195,27 @@ class _loginState extends State<login> {
                           FadeAnimation(
                               1.6,
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   if (_formKey.currentState.validate()) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text('Processing Data')));
+                                    try {
+                                      final user = await _auth
+                                          .signInWithEmailAndPassword(
+                                              email: email, password: pass);
+                                      if (user != null) {
+                                        if (radioValue == 1) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      TeacherDashBoardPage()));
+                                        } else {
+                                          print("speed bhada bhadwe");
+                                        }
+                                      }
+                                    } catch (e) {
+                                      print(e);
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -180,7 +247,7 @@ class _loginState extends State<login> {
                               1.7,
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder: (BuildContext context) =>
