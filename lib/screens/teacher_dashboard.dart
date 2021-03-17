@@ -7,6 +7,8 @@ import 'package:gurukul_beta/screens/login.dart';
 import 'add_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+String name = "User", email = "currUser.email";
+String password, phone, roll, flag;
 class classroomDetails {
   final String name;
   final String subject;
@@ -25,9 +27,9 @@ class TeacherDashBoardPage extends StatefulWidget {
 class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final currUserDb = Firestore.instance;
+  final _userClass = Firestore.instance;
   FirebaseUser currUser;
-  String name = "User", email = "currUser.email";
-  String password, phone, roll, flag;
+
   Color activeColor = Colors.black;
   @override
   void initState() {
@@ -35,8 +37,20 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
     super.initState();
     getCurrentUser();
     fetchData();
+    // fetchClassData();
   }
-
+  // void fetchClassData() async{
+  //  await for (var snapshot in _userClass.collection('classrooms').snapshots())
+  //    {
+  //      for(var classroom in snapshot.documents)
+  //        {
+  //          if(classroom.data['teacher_name']==name)
+  //            {
+  //
+  //            }
+  //        }
+  //    }
+  // }
   void fetchData() async {
     final credentials =
         await currUserDb.collection('teacher_credentials').getDocuments();
@@ -72,32 +86,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
   bool dashboardMenu = true, profileMenu = false, addClassMenu = false;
   double screenHeight, screenWidth;
 
-  List<classroomDetails> myclassroomList = [
-    new classroomDetails(
-      name: 'IX-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-  ];
+
   Widget classroomList(
     List<classroomDetails> classList,
   ) {
@@ -110,7 +99,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
           physics: ClampingScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            classroomDetails _classroom = myclassroomList[index];
+            classroomDetails _classroom = classList[index];
             return Container(
               margin: EdgeInsets.only(
                 bottom: 20,
@@ -171,7 +160,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
               ),
             );
           },
-          itemCount: myclassroomList.length,
+          itemCount: classList.length,
         ),
       ],
     );
@@ -366,12 +355,33 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         shrinkWrap: true,
                         children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[],
+                          // classroomList(myclassroomList),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: _userClass.collection('classrooms').snapshots(),
+                            builder: (context, snapshot){
+                            if(!snapshot.hasData){
+                              return Center(
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.green[800],
+                              ),
+                              );
+                            }
+                            final classDetails = snapshot.data.documents;
+                            List<classroomDetails> myclassroomList = [
+                            ];
+                            for(var classDetail in classDetails)
+                              {
+                                if(classDetail.data['teacher_name']==name)
+                                  {
+                                    final classname = classDetail.data['class_name'];
+                                    final subjectname = classDetail.data['subject_name'];
+                                    final classroominfo = new classroomDetails(name: classname, subject: subjectname);
+                                    myclassroomList.add(classroominfo);
+                                  }
+                              }
+                            return classroomList(myclassroomList);
+                            },
                           ),
-                          classroomList(myclassroomList),
                         ],
                       ),
                     ),

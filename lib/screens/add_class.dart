@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gurukul_beta/animations/fade.dart';
 import 'teacher_dashboard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 class AddNewClass extends StatefulWidget {
   @override
   _AddNewClassState createState() => _AddNewClassState();
 }
 
 class _AddNewClassState extends State<AddNewClass> {
-  String name="User", email="User@gmail.com";
   Color activeColor = Colors.black;
   Color inactiveColor = Colors.grey[700];
   final _formKey = GlobalKey<FormState>();
   double screenWidth, screenHeight;
   String classname;
+  String sectionname;
   String subjectname;
+  final _firestore = Firestore.instance;
   Brightness statusIconColor = Brightness.dark;
   @override
   Widget build(BuildContext context) {
@@ -208,6 +212,27 @@ class _AddNewClassState extends State<AddNewClass> {
                                             border: InputBorder.none),
                                       ),
                                     ),
+                                    //section name
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: TextFormField(
+                                        obscureText: false,
+                                        onChanged: (val){
+                                          setState(() {
+                                            sectionname = val;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: "Section name",
+                                            hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
                                     //subject name box
                                     Container(
                                       padding: EdgeInsets.all(10),
@@ -241,29 +266,24 @@ class _AddNewClassState extends State<AddNewClass> {
                           FadeAnimation(
                               1.6,
                               GestureDetector(
-                                onTap: (){
-                                  Navigator.pop(context);
+                                onTap: ()async{
+                                  await _firestore.collection('classrooms').add({
+                                    'class_name': '$classname-$sectionname',
+                                    'subject_name': subjectname,
+                                    'teacher_name': name,
+                                    'total_quizes': 0,
+                                    'total_students':0,
+                                    'quiz_name': [],
+                                    'student_name': [],
+                                  });
+                                  print('class added');
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext
+                                          context) =>
+                                              TeacherDashBoardPage()));
                                 },
-                                // onTap: () async {
-                                //   if (_formKey.currentState.validate()) {
-                                //     try {
-                                //       final newUser = await _auth
-                                //           .createUserWithEmailAndPassword(
-                                //           email: email, password: pass);
-                                //       if (newUser != null) {
-                                //         print("registered");
-                                //         Navigator.pushReplacement(
-                                //             context,
-                                //             MaterialPageRoute(
-                                //                 builder:
-                                //                     (BuildContext context) =>
-                                //                     TeacherDashboardPage()));
-                                //       }
-                                //     } catch (e) {
-                                //       _showMyDialog();
-                                //     }
-                                //   }
-                                // },
                                 child: Container(
                                   height: 50,
                                   margin: EdgeInsets.symmetric(horizontal: 50),
