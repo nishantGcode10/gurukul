@@ -6,6 +6,8 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:gurukul_beta/demo.dart';
 import 'teacher_dashboard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class RegScreen extends StatefulWidget {
   @override
@@ -15,12 +17,14 @@ class RegScreen extends StatefulWidget {
 class _RegScreenState extends State<RegScreen> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
+  final _db = Firestore.instance;
   String name;
   String pass;
   String email;
   String phone;
   String rollno;
   int radioValue = -1;
+  bool spin = false;
   IconData viewpass1 = CupertinoIcons.lock_open;
   IconData viewpass2 = CupertinoIcons.lock_open;
   bool pass1 = true;
@@ -97,346 +101,369 @@ class _RegScreenState extends State<RegScreen> {
       RequiredValidator(
         errorText: 'name is required',
       ),
-      MinLengthValidator(1,
-          errorText: 'name must be at least 1 digits long'),
+      MinLengthValidator(1, errorText: 'name must be at least 1 digits long'),
     ]);
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Color(0xFF1B8F91),
-          Color(0xFF8CD9C0),
-          Color(0xFF8CD9C0),
-          Colors.white,
-        ])),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 80,
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    FadeAnimation(
-                        1,
-                        Center(
-                          child: Text(
-                            "Register",
-                            style: TextStyle(color: Colors.white, fontSize: 40),
-                          ),
-                        )),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
+      body: ModalProgressHUD(
+        inAsyncCall: spin,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+            Color(0xFF1B8F91),
+            Color(0xFF8CD9C0),
+            Color(0xFF8CD9C0),
+            Colors.white,
+          ])),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 80,
                 ),
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 10.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60))),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 60,
-                          ),
-                          FadeAnimation(
-                              1.4,
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color:
-                                              Color.fromRGBO(225, 95, 27, .3),
-                                          blurRadius: 20,
-                                          offset: Offset(0, 4))
-                                    ]),
-                                child: Column(
-                                  children: <Widget>[
-                                    //name
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: TextFormField(
-                                        obscureText: false,
-                                        onChanged: (val) {
-                                          setState(() {
-                                            name = val;
-                                          });
-                                        },
-                                        validator: nameValidator,
-                                        decoration: InputDecoration(
-                                            hintText: "Full Name",
-                                            hintStyle:
-                                            TextStyle(color: Colors.grey),
-                                            border: InputBorder.none),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      FadeAnimation(
+                          1,
+                          Center(
+                            child: Text(
+                              "Register",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 40),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(60),
+                            topRight: Radius.circular(60))),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.all(30),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 60,
+                            ),
+                            FadeAnimation(
+                                1.4,
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color:
+                                                Color.fromRGBO(225, 95, 27, .3),
+                                            blurRadius: 20,
+                                            offset: Offset(0, 4))
+                                      ]),
+                                  child: Column(
+                                    children: <Widget>[
+                                      //name
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: TextFormField(
+                                          obscureText: false,
+                                          onChanged: (val) {
+                                            setState(() {
+                                              name = val;
+                                            });
+                                          },
+                                          validator: nameValidator,
+                                          decoration: InputDecoration(
+                                              hintText: "Full Name",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: InputBorder.none),
+                                        ),
                                       ),
-                                    ),
-                                    //email box
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: TextFormField(
-                                        obscureText: false,
-                                        onChanged: (val) {
-                                          setState(() {
-                                            email = val;
-                                          });
-                                        },
-                                        validator: emailValidator,
-                                        decoration: InputDecoration(
-                                            hintText: "Email",
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
-                                            border: InputBorder.none),
+                                      //email box
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: TextFormField(
+                                          obscureText: false,
+                                          onChanged: (val) {
+                                            setState(() {
+                                              email = val;
+                                            });
+                                          },
+                                          validator: emailValidator,
+                                          decoration: InputDecoration(
+                                              hintText: "Email",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: InputBorder.none),
+                                        ),
                                       ),
-                                    ),
-                                    //password box
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: TextFormField(
-                                              obscureText: pass1,
-                                              onChanged: (val) => pass = val,
-                                              validator: passwordValidator,
-                                              decoration: InputDecoration(
-                                                  hintText: "Password",
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.grey),
-                                                  border: InputBorder.none),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                if (pass1) {
-                                                  viewpass1 =
-                                                      CupertinoIcons.lock;
-                                                  pass1 = !pass1;
-                                                } else {
-                                                  viewpass1 =
-                                                      CupertinoIcons.lock_open;
-                                                  pass1 = !pass1;
-                                                }
-                                              });
-                                            },
-                                            child: Icon(
-                                              viewpass1,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    //match password
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: TextFormField(
-                                              obscureText: pass2,
-                                              validator: (val) => MatchValidator(
-                                                      errorText:
-                                                          'passwords do not match')
-                                                  .validateMatch(val, pass),
-                                              decoration: InputDecoration(
-                                                  hintText: "Confirm Password",
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.grey),
-                                                  border: InputBorder.none),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                if (pass2) {
-                                                  viewpass2 =
-                                                      CupertinoIcons.lock;
-                                                  pass2 = !pass2;
-                                                } else {
-                                                  viewpass2 =
-                                                      CupertinoIcons.lock_open;
-                                                  pass2 = !pass2;
-                                                }
-                                              });
-                                            },
-                                            child: Icon(
-                                              viewpass2,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    //phone number box
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: TextFormField(
-                                        obscureText: false,
-                                        onChanged: (val) => phone = val,
-                                        validator: phoneValidator,
-                                        decoration: InputDecoration(
-                                            hintText: "+9876543210",
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
-                                            border: InputBorder.none),
-                                      ),
-                                    ),
-                                    //role
-                                    Container(
+                                      //password box
+                                      Container(
                                         padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                             border: Border(
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            Row(
-                                              children: [
-                                                new Radio(
-                                                    activeColor: Colors.green,
-                                                    value: 0,
-                                                    groupValue: radioValue,
-                                                    onChanged:
-                                                        _handleRadioValueChanged),
-                                                Text('Student'),
-                                              ],
+                                            Expanded(
+                                              child: TextFormField(
+                                                obscureText: pass1,
+                                                onChanged: (val) => pass = val,
+                                                validator: passwordValidator,
+                                                decoration: InputDecoration(
+                                                    hintText: "Password",
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.grey),
+                                                    border: InputBorder.none),
+                                              ),
                                             ),
-                                            Row(
-                                              children: [
-                                                new Radio<int>(
-                                                    activeColor: Colors.green,
-                                                    value: 1,
-                                                    groupValue: radioValue,
-                                                    onChanged:
-                                                        _handleRadioValueChanged),
-                                                Text('Teacher'),
-                                              ],
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (pass1) {
+                                                    viewpass1 =
+                                                        CupertinoIcons.lock;
+                                                    pass1 = !pass1;
+                                                  } else {
+                                                    viewpass1 = CupertinoIcons
+                                                        .lock_open;
+                                                    pass1 = !pass1;
+                                                  }
+                                                });
+                                              },
+                                              child: Icon(
+                                                viewpass1,
+                                              ),
                                             ),
                                           ],
-                                        )),
-                                    //roll number
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: TextFormField(
-                                        obscureText: false,
-                                        onChanged: (val) => rollno = val,
-                                        validator: rollValidator,
-                                        decoration: InputDecoration(
-                                            hintText: "Roll number",
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
-                                            border: InputBorder.none),
+                                        ),
+                                      ),
+                                      //match password
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextFormField(
+                                                obscureText: pass2,
+                                                validator: (val) => MatchValidator(
+                                                        errorText:
+                                                            'passwords do not match')
+                                                    .validateMatch(val, pass),
+                                                decoration: InputDecoration(
+                                                    hintText:
+                                                        "Confirm Password",
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.grey),
+                                                    border: InputBorder.none),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (pass2) {
+                                                    viewpass2 =
+                                                        CupertinoIcons.lock;
+                                                    pass2 = !pass2;
+                                                  } else {
+                                                    viewpass2 = CupertinoIcons
+                                                        .lock_open;
+                                                    pass2 = !pass2;
+                                                  }
+                                                });
+                                              },
+                                              child: Icon(
+                                                viewpass2,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      //phone number box
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: TextFormField(
+                                          obscureText: false,
+                                          onChanged: (val) => phone = val,
+                                          validator: phoneValidator,
+                                          decoration: InputDecoration(
+                                              hintText: "+9876543210",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: InputBorder.none),
+                                        ),
+                                      ),
+                                      //role
+                                      Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  new Radio(
+                                                      activeColor: Colors.green,
+                                                      value: 0,
+                                                      groupValue: radioValue,
+                                                      onChanged:
+                                                          _handleRadioValueChanged),
+                                                  Text('Student'),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  new Radio<int>(
+                                                      activeColor: Colors.green,
+                                                      value: 1,
+                                                      groupValue: radioValue,
+                                                      onChanged:
+                                                          _handleRadioValueChanged),
+                                                  Text('Teacher'),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      //roll number
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[200]))),
+                                        child: TextFormField(
+                                          obscureText: false,
+                                          onChanged: (val) => rollno = val,
+                                          validator: rollValidator,
+                                          decoration: InputDecoration(
+                                              hintText: "Roll number",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: InputBorder.none),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            //
+                            SizedBox(
+                              height: 40,
+                            ),
+                            FadeAnimation(
+                                1.6,
+                                GestureDetector(
+                                  onTap: () async {
+                                    setState(() {
+                                      spin = true;
+                                    });
+                                    if (_formKey.currentState.validate()) {
+                                      try {
+                                        final newUser = await _auth
+                                            .createUserWithEmailAndPassword(
+                                                email: email, password: pass);
+
+                                        if (newUser != null) {
+                                          await _db
+                                              .collection("teacher_credentials")
+                                              .add({
+                                            'Name': name,
+                                            'email': email,
+                                            'password': pass,
+                                            'Flag': radioValue,
+                                            'Phone': phone,
+                                            'Roll_No.': rollno,
+                                          });
+                                          print("registered");
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      TeacherDashBoardPage()));
+                                        }
+                                        setState(() {
+                                          spin = false;
+                                        });
+                                      } catch (e) {
+                                        _showMyDialog();
+                                      }
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 50),
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color(0xFF8CD9C0),
+                                              blurRadius: 10,
+                                              offset: Offset(0, 10))
+                                        ],
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Color(0xFF53BEB3)),
+                                    child: Center(
+                                      child: Text(
+                                        "Register",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          //
-                          SizedBox(
-                            height: 40,
-                          ),
-                          FadeAnimation(
-                              1.6,
-                              GestureDetector(
-                                onTap: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    try {
-                                      final newUser = await _auth
-                                          .createUserWithEmailAndPassword(
-                                              email: email, password: pass);
-                                      if (newUser != null) {
-                                        print("registered");
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    TeacherDashBoardPage()));
-                                      }
-                                    } catch (e) {
-                                      _showMyDialog();
-                                    }
-                                  }
-                                },
-                                child: Container(
-                                  height: 50,
-                                  margin: EdgeInsets.symmetric(horizontal: 50),
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Color(0xFF8CD9C0),
-                                            blurRadius: 10,
-                                            offset: Offset(0, 10))
-                                      ],
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: Color(0xFF53BEB3)),
-                                  child: Center(
-                                    child: Text(
-                                      "Register",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
                                   ),
-                                ),
-                              )),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          //
-                        ],
+                                )),
+                            SizedBox(
+                              height: 50,
+                            ),
+                            //
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

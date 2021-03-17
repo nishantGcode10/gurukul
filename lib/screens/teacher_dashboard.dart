@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,14 +24,36 @@ class TeacherDashBoardPage extends StatefulWidget {
 
 class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
+  final currUserDb = Firestore.instance;
   FirebaseUser currUser;
   String name = "User", email = "currUser.email";
+  String password, phone, roll, flag;
   Color activeColor = Colors.black;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCurrentUser();
+    fetchData();
+  }
+
+  void fetchData() async {
+    final credentials =
+        await currUserDb.collection('teacher_credentials').getDocuments();
+    for (var credential in credentials.documents) {
+      if (credential.data['email'] == email) {
+        setState(() {
+          name = credential.data['Name'];
+          password = credential.data['password'];
+          roll = credential.data['Roll_No.'];
+          flag = credential.data['Flag'];
+          phone = credential.data['Phone'];
+        });
+
+        print(credential.data);
+        break;
+      }
+    }
   }
 
   void getCurrentUser() async {
@@ -108,7 +131,8 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                   image: DecorationImage(
                     image: AssetImage('assets/tile${index % 5}.jpg'),
                     fit: BoxFit.cover,
-                    colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                    colorFilter: new ColorFilter.mode(
+                        Colors.black.withOpacity(0.8), BlendMode.dstATop),
                   ),
                   boxShadow: [
                     BoxShadow(
