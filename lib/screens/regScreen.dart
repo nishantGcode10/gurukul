@@ -15,6 +15,7 @@ class RegScreen extends StatefulWidget {
 class _RegScreenState extends State<RegScreen> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
+  String name;
   String pass;
   String email;
   String phone;
@@ -92,6 +93,13 @@ class _RegScreenState extends State<RegScreen> {
       MinLengthValidator(1,
           errorText: 'roll number must be at least 1 digits long'),
     ]);
+    final nameValidator = MultiValidator([
+      RequiredValidator(
+        errorText: 'name is required',
+      ),
+      MinLengthValidator(1,
+          errorText: 'name must be at least 1 digits long'),
+    ]);
 
     return Scaffold(
       body: Container(
@@ -162,6 +170,28 @@ class _RegScreenState extends State<RegScreen> {
                                     ]),
                                 child: Column(
                                   children: <Widget>[
+                                    //name
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: TextFormField(
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {
+                                            name = val;
+                                          });
+                                        },
+                                        validator: nameValidator,
+                                        decoration: InputDecoration(
+                                            hintText: "Full Name",
+                                            hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
                                     //email box
                                     Container(
                                       padding: EdgeInsets.all(10),

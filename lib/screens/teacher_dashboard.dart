@@ -108,7 +108,16 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                   image: DecorationImage(
                     image: AssetImage('assets/tile${index % 5}.jpg'),
                     fit: BoxFit.cover,
+                    colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.dstATop),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: ListTile(
                   contentPadding: EdgeInsets.fromLTRB(25, 15, 25, 15),
