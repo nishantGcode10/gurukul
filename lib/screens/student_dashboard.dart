@@ -8,20 +8,21 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'add_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gurukul_beta/utilities/signoutbutton.dart';
-import 'package:gurukul_beta/utilities/classroom_details.dart';
 import 'package:gurukul_beta/utilities/dashboard_tile.dart';
+import 'package:gurukul_beta/utilities/classroom_details.dart';
 
-class teacherDetails{
+class studentDetails{
   static String name = "User", email = "currUser.email";
   static String password, phone, roll, flag;
 }
 
-class TeacherDashBoardPage extends StatefulWidget {
+
+class StudentDashBoardPage extends StatefulWidget {
   @override
-  _TeacherDashBoardPageState createState() => _TeacherDashBoardPageState();
+  _StudentDashBoardPageState createState() => _StudentDashBoardPageState();
 }
 
-class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
+class _StudentDashBoardPageState extends State<StudentDashBoardPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final currUserDb = Firestore.instance;
   final _userClass = Firestore.instance;
@@ -44,15 +45,15 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
   }
   Future<void> fetchData() async {
     final credentials =
-        await currUserDb.collection('teacher_credentials').getDocuments();
+    await currUserDb.collection('teacher_credentials').getDocuments();
     for (var credential in credentials.documents) {
-      if (credential.data['email'] == teacherDetails.email) {
+      if (credential.data['email'] == studentDetails.email) {
         setState(() {
-          teacherDetails.name = credential.data['Name'];
-          teacherDetails.password = credential.data['password'];
-          teacherDetails.roll = credential.data['Roll_No.'];
-          teacherDetails.flag = credential.data['Flag'];
-          teacherDetails.phone = credential.data['Phone'];
+          studentDetails.name = credential.data['Name'];
+          studentDetails.password = credential.data['password'];
+          studentDetails.roll = credential.data['Roll_No.'];
+          studentDetails.flag = credential.data['Flag'];
+          studentDetails.phone = credential.data['Phone'];
         });
 
         print(credential.data);
@@ -67,7 +68,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
       if (user != null) {
         setState(() {
           currUser = user;
-          teacherDetails.email = currUser.email;
+          studentDetails.email = currUser.email;
         });
       }
     } catch (e) {
@@ -82,8 +83,8 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
 
 
   Widget classroomList(
-    List<classroomDetails> classList,
-  ) {
+      List<classroomDetails> classList,
+      ) {
     return ListView(
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
@@ -127,40 +128,6 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                   ],
                 ),
                 child: dashboardTile(classroom: _classroom),
-                //ListTile(
-                //   contentPadding: EdgeInsets.fromLTRB(25, 35, 25, 35),
-                //   leading: Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       Icon(
-                //         Icons.people,
-                //       ),
-                //     ],
-                //   ),
-                //   title: Text(
-                //     "${_classroom.name}",
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.bold,
-                //       fontSize: 35,
-                //     ),
-                //   ),
-                //   subtitle: Text(
-                //     "${_classroom.subject}",
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.w600,
-                //       fontSize: 25.0,
-                //     ),
-                //   ),
-                //   trailing: Column(
-                //     children: [
-                //       Icon(
-                //         Icons.people,
-                //         color: Colors.white,
-                //       ),
-                //       Text('${_classroom.studentNumber}', style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                //     ],
-                //   ),
-                //),
               ),
             );
           },
@@ -193,10 +160,10 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                 color: Color(0xFF1B8F91),
               ),
               accountName: Text(
-                teacherDetails.name,
+                studentDetails.name,
                 style: TextStyle(fontSize: 20.0),
               ),
-              accountEmail: Text(teacherDetails.email),
+              accountEmail: Text(studentDetails.email),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.blue,
                 child: Container(
@@ -208,7 +175,6 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                 ),
               ),
             ),
-            //dashboard
             ListTile(
               leading: Icon(
                 Icons.message,
@@ -223,7 +189,6 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                 ),
               ),
             ),
-            //profile
             ListTile(
               leading: Icon(
                 Icons.account_box_rounded,
@@ -231,26 +196,6 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
               ),
               title: Text(
                 "Profile",
-                style: TextStyle(
-                  color: inactiveColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            //add new class
-            ListTile(
-              onTap: () {
-                // Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => AddNewClass()));
-              },
-              leading: Icon(
-                Icons.add_circle,
-                color: inactiveColor,
-              ),
-              title: Text(
-                "Add Class",
                 style: TextStyle(
                   color: inactiveColor,
                   fontSize: 20.0,
@@ -358,7 +303,9 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                                   ];
                                   for(var classDetail in classDetails)
                                   {
-                                    if(classDetail.data['teacher_email']==teacherDetails.email)
+                                    for(var studentEmail in classDetail.data['student_email'])
+                                    {
+                                      if(studentEmail==studentDetails.email)
                                     {
                                       final classname = classDetail.data['class_name'];
                                       final subjectname = classDetail.data['subject_name'];
@@ -366,6 +313,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                                       final teacherName = classDetail.data['teacher_name'];
                                       final classroominfo = new classroomDetails(name: classname, subject: subjectname, studentNumber: studentNumber, teacherName: teacherName);
                                       myclassroomList.add(classroominfo);
+                                    }
                                     }
                                   }
                                   return classroomList(myclassroomList);
@@ -385,4 +333,3 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
 
   }
 }
-

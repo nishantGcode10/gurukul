@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'teacher_dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'student_dashboard.dart';
 class RegScreen extends StatefulWidget {
   @override
   _RegScreenState createState() => _RegScreenState();
@@ -418,12 +418,24 @@ class _RegScreenState extends State<RegScreen> {
                                             'Roll_No.': rollno,
                                           });
                                           print("registered");
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      TeacherDashBoardPage()));
+                                          if(radioValue==1)
+                                            {
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                      context) =>
+                                                          TeacherDashBoardPage()));
+                                            }
+                                          else if(radioValue==0)
+                                            {
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                      context) =>
+                                                          StudentDashBoardPage()));
+                                            }
                                         }
                                         setState(() {
                                           spin = false;

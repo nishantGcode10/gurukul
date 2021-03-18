@@ -47,8 +47,8 @@ class _AddNewClassState extends State<AddNewClass> {
               decoration: BoxDecoration(
                 color: Color(0xFF1B8F91) ,
               ),
-              accountName: Text(name, style: TextStyle(fontSize: 20.0),),
-              accountEmail: Text(email),
+              accountName: Text(teacherDetails.name, style: TextStyle(fontSize: 20.0),),
+              accountEmail: Text(teacherDetails.email),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Color(0xFF1B8F91),
                 child: Container(
@@ -258,12 +258,12 @@ class _AddNewClassState extends State<AddNewClass> {
                                   await _firestore.collection('classrooms').add({
                                     'class_name': '$classname-$sectionname',
                                     'subject_name': subjectname,
-                                    'teacher_name': name,
+                                    'teacher_name': teacherDetails.name,
                                     'total_quizes': 0,
                                     'total_students':0,
                                     'quiz_name': [],
                                     'student_email': [],
-                                    'teacher_email': email,
+                                    'teacher_email': teacherDetails.email,
                                   });
                                   print('class added');
                                   Navigator.pushReplacement(

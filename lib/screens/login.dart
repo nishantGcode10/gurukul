@@ -2,14 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gurukul_beta/animations/fade.dart';
-//import 'package:email_validator/email_validator.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'regScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:gurukul_beta/demo.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'teacher_dashboard.dart';
-
+import 'student_dashboard.dart';
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
@@ -210,14 +208,19 @@ class _loginState extends State<login> {
                                                 email: email, password: pass);
                                         if (user != null) {
                                           if (radioValue == 1) {
-                                            Navigator.push(
+                                            Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (BuildContext
                                                             context) =>
                                                         TeacherDashBoardPage()));
-                                          } else {
-                                            print("speed bhada bhadwe");
+                                          } else if(radioValue==0){
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                    context) =>
+                                                        StudentDashBoardPage()));
                                           }
                                         }
                                         setState(() {
