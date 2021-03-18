@@ -210,7 +210,7 @@ class _loginState extends State<login> {
                                                 email: email, password: pass);
                                         if (user != null) {
                                           if (radioValue == 1) {
-                                            Navigator.push(
+                                            Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (BuildContext

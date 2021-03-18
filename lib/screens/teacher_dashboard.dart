@@ -7,6 +7,9 @@ import 'package:gurukul_beta/screens/login.dart';
 import 'add_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+String name = "", email = "currUser.email";
+String password, phone, roll, flag;
+
 class classroomDetails {
   final String name;
   final String subject;
@@ -26,8 +29,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final currUserDb = Firestore.instance;
   FirebaseUser currUser;
-  String name = "User", email = "currUser.email";
-  String password, phone, roll, flag;
+
   Color activeColor = Colors.black;
   @override
   void initState() {
@@ -182,6 +184,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
+    fetchData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF1B8F91),
