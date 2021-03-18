@@ -5,13 +5,15 @@ import 'package:gurukul_beta/animations/fade.dart';
 import 'teacher_dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'package:gurukul_beta/utilities/signoutbutton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class AddNewClass extends StatefulWidget {
   @override
   _AddNewClassState createState() => _AddNewClassState();
 }
 
 class _AddNewClassState extends State<AddNewClass> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   Color activeColor = Colors.black;
   Color inactiveColor = Colors.grey[700];
   final _formKey = GlobalKey<FormState>();
@@ -105,20 +107,7 @@ class _AddNewClassState extends State<AddNewClass> {
                 ),
               ),
             ),
-            ListTile(
-              leading: Icon(
-                Icons.exit_to_app,
-                color: inactiveColor,
-              ),
-              title: Text(
-                "Sign Out",
-                style: TextStyle(
-                  color: inactiveColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+            SignOutButton(auth: _auth, inactiveColor: inactiveColor),
           ],
         ),
       ),
@@ -242,7 +231,6 @@ class _AddNewClassState extends State<AddNewClass> {
                                                   color: Colors.grey[200]))),
                                       child: TextFormField(
                                         onChanged: (val) => subjectname = val,
-
                                         decoration: InputDecoration(
                                             hintText: "Subject Name",
                                             hintStyle:
@@ -275,6 +263,7 @@ class _AddNewClassState extends State<AddNewClass> {
                                     'total_students':0,
                                     'quiz_name': [],
                                     'student_name': [],
+                                    'teacher_email': email,
                                   });
                                   print('class added');
                                   Navigator.pushReplacement(

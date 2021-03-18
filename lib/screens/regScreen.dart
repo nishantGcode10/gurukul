@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gurukul_beta/animations/fade.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -212,6 +213,7 @@ class _RegScreenState extends State<RegScreen> {
                                               email = val;
                                             });
                                           },
+                                          keyboardType: TextInputType.emailAddress,
                                           validator: emailValidator,
                                           decoration: InputDecoration(
                                               hintText: "Email",
@@ -315,6 +317,7 @@ class _RegScreenState extends State<RegScreen> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
                                         child: TextFormField(
+                                          keyboardType: TextInputType.number,
                                           obscureText: false,
                                           onChanged: (val) => phone = val,
                                           validator: phoneValidator,
@@ -369,6 +372,7 @@ class _RegScreenState extends State<RegScreen> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
                                         child: TextFormField(
+                                          keyboardType: TextInputType.number,
                                           obscureText: false,
                                           onChanged: (val) => rollno = val,
                                           validator: rollValidator,
