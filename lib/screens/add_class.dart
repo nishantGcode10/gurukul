@@ -262,7 +262,7 @@ class _AddNewClassState extends State<AddNewClass> {
                                     'total_quizes': 0,
                                     'total_students':0,
                                     'quiz_name': [],
-                                    'student_name': [],
+                                    'student_email': [],
                                     'teacher_email': email,
                                   });
                                   print('class added');

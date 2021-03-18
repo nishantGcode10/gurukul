@@ -35,13 +35,18 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
 
   Color activeColor = Colors.black;
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
+
     super.initState();
-    getCurrentUser();
+    getAllData();
+    //getCurrentUser();
     //fetchData();
   }
-
+  void getAllData() async{
+    await getCurrentUser();
+    await fetchData();
+  }
   Future<void> fetchData() async {
     final credentials =
         await currUserDb.collection('teacher_credentials').getDocuments();
@@ -61,17 +66,19 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
     }
   }
 
-  void getCurrentUser() async {
+  Future<void> getCurrentUser() async {
     try {
       final user = await _auth.currentUser();
       if (user != null) {
-        currUser = user;
-        email = currUser.email;
+        setState(() {
+          currUser = user;
+          email = currUser.email;
+        });
       }
     } catch (e) {
       print(e);
     }
-    await fetchData();
+    //await fetchData();
   }
 
   Color inactiveColor = Colors.grey[700];
@@ -352,7 +359,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
                                   ];
                                   for(var classDetail in classDetails)
                                   {
-                                    if(classDetail.data['teacher_name']==name)
+                                    if(classDetail.data['teacher_email']==email)
                                     {
                                       final classname = classDetail.data['class_name'];
                                       final subjectname = classDetail.data['subject_name'];
