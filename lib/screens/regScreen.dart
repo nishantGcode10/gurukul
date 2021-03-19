@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gurukul_beta/animations/fade.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'teacher_dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'student_dashboard.dart';
 class RegScreen extends StatefulWidget {
   @override
   _RegScreenState createState() => _RegScreenState();
@@ -212,6 +213,7 @@ class _RegScreenState extends State<RegScreen> {
                                               email = val;
                                             });
                                           },
+                                          keyboardType: TextInputType.emailAddress,
                                           validator: emailValidator,
                                           decoration: InputDecoration(
                                               hintText: "Email",
@@ -315,6 +317,7 @@ class _RegScreenState extends State<RegScreen> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
                                         child: TextFormField(
+                                          keyboardType: TextInputType.number,
                                           obscureText: false,
                                           onChanged: (val) => phone = val,
                                           validator: phoneValidator,
@@ -369,6 +372,7 @@ class _RegScreenState extends State<RegScreen> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
                                         child: TextFormField(
+                                          keyboardType: TextInputType.number,
                                           obscureText: false,
                                           onChanged: (val) => rollno = val,
                                           validator: rollValidator,
@@ -414,12 +418,24 @@ class _RegScreenState extends State<RegScreen> {
                                             'Roll_No.': rollno,
                                           });
                                           print("registered");
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      TeacherDashBoardPage()));
+                                          if(radioValue==1)
+                                            {
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                      context) =>
+                                                          TeacherDashBoardPage()));
+                                            }
+                                          else if(radioValue==0)
+                                            {
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                      context) =>
+                                                          StudentDashBoardPage()));
+                                            }
                                         }
                                         setState(() {
                                           spin = false;
