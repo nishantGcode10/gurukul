@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'teacher_dashboard.dart';
 import 'student_dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
@@ -20,6 +22,7 @@ class _loginState extends State<login> {
   String email;
   bool spin = false;
   FirebaseAuth _auth = FirebaseAuth.instance;
+
   void _handleRadioValueChanged(var value) {
     setState(() {
       radioValue = value;
@@ -207,6 +210,11 @@ class _loginState extends State<login> {
                                             .signInWithEmailAndPassword(
                                                 email: email, password: pass);
                                         if (user != null) {
+                                          final SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          prefs.setString('emailId', email);
+                                          prefs.setInt('radio', radioValue);
                                           if (radioValue == 1) {
                                             Navigator.pushReplacement(
                                                 context,
@@ -214,12 +222,12 @@ class _loginState extends State<login> {
                                                     builder: (BuildContext
                                                             context) =>
                                                         TeacherDashBoardPage()));
-                                          } else if(radioValue==0){
+                                          } else if (radioValue == 0) {
                                             Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (BuildContext
-                                                    context) =>
+                                                            context) =>
                                                         StudentDashBoardPage()));
                                           }
                                         }

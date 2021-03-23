@@ -11,7 +11,7 @@ import 'package:gurukul_beta/utilities/signoutbutton.dart';
 import 'package:gurukul_beta/utilities/classroom_details.dart';
 import 'package:gurukul_beta/utilities/dashboard_tile.dart';
 
-class teacherDetails{
+class teacherDetails {
   static String name = "User", email = "currUser.email";
   static String password, phone, roll, flag;
 }
@@ -30,7 +30,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
 
   Color activeColor = Colors.black;
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
 
     super.initState();
@@ -38,10 +38,12 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
     //getCurrentUser();
     //fetchData();
   }
-  void getAllData() async{
+
+  void getAllData() async {
     await getCurrentUser();
     await fetchData();
   }
+
   Future<void> fetchData() async {
     final credentials =
         await currUserDb.collection('teacher_credentials').getDocuments();
@@ -176,7 +178,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
     screenWidth = size.width;
     //while(name=="User");
     //fetchData();
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF1B8F91),
         title: Text(
@@ -263,125 +265,137 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
       ),
       body: SafeArea(
           child: Stack(
+        children: <Widget>[
+          ListView(
+            padding: EdgeInsets.all(0),
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
             children: <Widget>[
-              ListView(
-                padding: EdgeInsets.all(0),
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 5,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                "My Class",
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          AddNewClass()));
-                                },
-                                icon: Icon(
-                                  Icons.add_circle_outline,
-                                  color: Color(0xff1c7bfd),
-                                ),
-                                // onPressed: () {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //         builder: (BuildContext context) =>
-                                //             AddNewClass(),
-                                //       ));
-                                // },
-                              ),
-                            ],
+              Container(
+                padding: const EdgeInsets.only(
+                  top: 5,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            "My Class",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        // SizedBox(height: 10),
-                        //
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60)),
-                    ),
-                    padding: const EdgeInsets.only(bottom: 10, left: 5.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      children: <Widget>[
-                        // SizedBox(height: 15),
-                        Container(
-                          padding: EdgeInsets.only(
-                            bottom: 16,
-                            left: 16,
-                            right: 16,
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      AddNewClass()));
+                            },
+                            icon: Icon(
+                              Icons.add_circle_outline,
+                              color: Color(0xff1c7bfd),
+                            ),
+                            // onPressed: () {
+                            //   Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (BuildContext context) =>
+                            //             AddNewClass(),
+                            //       ));
+                            // },
                           ),
-                          child: ListView(
-                            physics: ClampingScrollPhysics(),
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            shrinkWrap: true,
-                            children: <Widget>[
-                              // classroomList(myclassroomList),
-                              StreamBuilder<QuerySnapshot>(
-                                stream: _userClass.collection('classrooms').snapshots(),
-                                builder: (context, snapshot){
-                                  if(!snapshot.hasData){
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        backgroundColor: Colors.green[800],
-                                      ),
-                                    );
+                        ],
+                      ),
+                    ),
+                    // SizedBox(height: 10),
+                    //
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(60),
+                      topRight: Radius.circular(60)),
+                ),
+                padding: const EdgeInsets.only(bottom: 10, left: 5.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  children: <Widget>[
+                    // SizedBox(height: 15),
+                    Container(
+                      padding: EdgeInsets.only(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                      ),
+                      child: ListView(
+                        physics: ClampingScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          // classroomList(myclassroomList),
+                          StreamBuilder<QuerySnapshot>(
+                            stream:
+                                _userClass.collection('classrooms').snapshots(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.green[800],
+                                  ),
+                                );
+                              }
+                              final classDetails = snapshot.data.documents;
+                              List<classroomDetails> myclassroomList = [];
+                              for (var classDetail in classDetails) {
+                                if (classDetail.data['teacher_email'] ==
+                                    teacherDetails.email) {
+                                  final classname =
+                                      classDetail.data['class_name'];
+                                  final subjectname =
+                                      classDetail.data['subject_name'];
+                                  final studentNumber =
+                                      classDetail.data['total_students'];
+                                  final teacherName =
+                                      classDetail.data['teacher_name'];
+                                  List<String> quizNames = [];
+                                  for (var quizname
+                                      in classDetail.data['quiz_name']) {
+                                    quizNames.add(quizname);
                                   }
-                                  final classDetails = snapshot.data.documents;
-                                  List<classroomDetails> myclassroomList = [
-                                  ];
-                                  for(var classDetail in classDetails)
-                                  {
-                                    if(classDetail.data['teacher_email']==teacherDetails.email)
-                                    {
-                                      final classname = classDetail.data['class_name'];
-                                      final subjectname = classDetail.data['subject_name'];
-                                      final studentNumber = classDetail.data['total_students'];
-                                      final teacherName = classDetail.data['teacher_name'];
-                                      final classroominfo = new classroomDetails(name: classname, subject: subjectname, studentNumber: studentNumber, teacherName: teacherName);
-                                      myclassroomList.add(classroominfo);
-                                    }
-                                  }
-                                  return classroomList(myclassroomList);
-                                },
-                              ),
-                            ],
+                                  final classroominfo = new classroomDetails(
+                                      name: classname,
+                                      subject: subjectname,
+                                      studentNumber: studentNumber,
+                                      teacherName: teacherName,
+                                      quiz_names: quizNames,
+                                      teacher_email: teacherDetails.email);
+                                  myclassroomList.add(classroominfo);
+                                }
+                              }
+                              return classroomList(myclassroomList);
+                            },
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
-          )),
+          ),
+        ],
+      )),
     );
-
   }
 }
-

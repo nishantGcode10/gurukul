@@ -1,296 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'utilities/bottomNavBar.dart';
 
-
-class classroomDetails {
-  final String name;
-  final String subject;
-
-  classroomDetails({
-    @required this.name,
-    @required this.subject,
-  });
-}
-
-class TeacherDashBoardPage extends StatefulWidget {
+class Demo extends StatefulWidget {
   @override
-  _TeacherDashBoardPageState createState() => _TeacherDashBoardPageState();
+  _DemoState createState() => _DemoState();
 }
 
-class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
-  String name="User", email="user@gmail.com";
-  Color activeColor = Colors.black;
-  Color inactiveColor = Colors.grey[700];
-  bool dashboardMenu = true, profileMenu=false, addClassMenu = false;
-  double screenHeight, screenWidth;
-
-  List<classroomDetails> myclassroomList = [
-    new classroomDetails(
-      name: 'IX-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-    new classroomDetails(
-      name: 'X-B',
-      subject: 'Hindi',
-    ),
-  ];
-  Widget classroomList(
-      List<classroomDetails> classList,
-      ) {
-    return ListView(
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      children: <Widget>[
-        ListView.builder(
-          padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            classroomDetails _classroom = myclassroomList[index];
-            return Container(
-              margin: EdgeInsets.only(
-                bottom: 20,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3,
-                  )
-                ],
-              ),
-              // padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-              child: ListTile(
-                contentPadding: EdgeInsets.fromLTRB(25, 15, 25, 15),
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.watch_later_outlined,
-                    ),
-                  ],
-                ),
-                title: Text(
-                  "${_classroom.name}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
-                  ),
-                ),
-                subtitle: Text(
-                  "${_classroom.subject}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 25.0,
-                  ),
-                ),
-              ),
-            );
-          },
-          itemCount: myclassroomList.length,
-        ),
-      ],
-    );
+class _DemoState extends State<Demo> {
+  Firestore _firestore = Firestore.instance;
+  void _onTapped(int index) async {
+    await _firestore.collection('classrooms').add({});
   }
 
   @override
-
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    screenHeight = size.height;
-    screenWidth = size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Classroom", style: TextStyle(fontSize: 30.0),),
+      bottomNavigationBar: FABBottomAppBar(
+        color: Colors.black,
+        backgroundColor: Colors.white,
+        selectedColor: Color(0xFF1B8F91),
+        notchedShape: CircularNotchedRectangle(),
+        onTabSelected: _onTapped,
+        items: [
+          FABBottomAppBarItem(iconData: Icons.assessment, text: 'Stats'),
+          FABBottomAppBarItem(iconData: Icons.search, text: 'Search'),
+          FABBottomAppBarItem(
+              iconData: Icons.people_alt_outlined, text: 'Students'),
+          FABBottomAppBarItem(iconData: Icons.more_horiz, text: ''),
+        ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text(name, style: TextStyle(fontSize: 20.0),),
-              accountEmail: Text(email),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: AssetImage('assets/dp.jpg')),
-                  ),
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.message,
-                color: activeColor,
-              ),
-              title: Text(
-                "DashBoard",
-                style: TextStyle(
-                  color: activeColor,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.account_box_rounded,
-                color: inactiveColor,
-              ),
-              title: Text(
-                "Profile",
-                style: TextStyle(
-                  color: inactiveColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.add_circle,
-                color: inactiveColor,
-              ),
-              title: Text(
-                "Add Class",
-                style: TextStyle(
-                  color: inactiveColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.exit_to_app,
-                color: inactiveColor,
-              ),
-              title: Text(
-                "Sign Out",
-                style: TextStyle(
-                  color: inactiveColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
+      body: Center(
+        child: Text("bhangBhomsda"),
       ),
-      body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              ListView(
-                padding: EdgeInsets.all(0),
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 5,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                "My Class",
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.add_circle_outline,
-                                  color: Color(0xff1c7bfd),
-                                ),
-                                // onPressed: () {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //         builder: (BuildContext context) =>
-                                //             AddNewClass(),
-                                //       ));
-                                // },
-                              ),
-                            ],
-                          ),
-                        ),
-                        // SizedBox(height: 10),
-                        //
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60)),
-                    ),
-                    padding:
-                    const EdgeInsets.only(bottom: 10, left: 5.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      children: <Widget>[
-                        // SizedBox(height: 15),
-                        Container(
-                          padding: EdgeInsets.only(
-                            bottom: 16,
-                            left: 16,
-                            right: 16,
-                          ),
-                          child: ListView(
-                            physics: ClampingScrollPhysics(),
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            shrinkWrap: true,
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-
-                                ],
-                              ),
-                              classroomList(myclassroomList),
-
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF1B8F91),
+        onPressed: () {},
+        child: Icon(Icons.add),
+        elevation: 2.0,
+      ),
     );
   }
 }
