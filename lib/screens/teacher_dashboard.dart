@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gurukul_beta/utilities/signoutbutton.dart';
 import 'package:gurukul_beta/utilities/classroom_details.dart';
 import 'package:gurukul_beta/utilities/dashboard_tile.dart';
-
+import 'package:gurukul_beta/utilities/classroom_list.dart';
 class teacherDetails {
   static String name = "User", email = "currUser.email";
   static String password, phone, roll, flag;
@@ -82,94 +82,7 @@ class _TeacherDashBoardPageState extends State<TeacherDashBoardPage> {
   bool dashboardMenu = true, profileMenu = false, addClassMenu = false;
   double screenHeight, screenWidth;
 
-  Widget classroomList(
-    List<classroomDetails> classList,
-  ) {
-    return ListView(
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      children: <Widget>[
-        ListView.builder(
-          padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            classroomDetails _classroom = classList[index];
-            return Container(
-              margin: EdgeInsets.only(
-                bottom: 20,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3,
-                  )
-                ],
-              ),
-              // padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/tile${index % 5}.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.8), BlendMode.dstATop),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: dashboardTile(classroom: _classroom),
-                //ListTile(
-                //   contentPadding: EdgeInsets.fromLTRB(25, 35, 25, 35),
-                //   leading: Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       Icon(
-                //         Icons.people,
-                //       ),
-                //     ],
-                //   ),
-                //   title: Text(
-                //     "${_classroom.name}",
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.bold,
-                //       fontSize: 35,
-                //     ),
-                //   ),
-                //   subtitle: Text(
-                //     "${_classroom.subject}",
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.w600,
-                //       fontSize: 25.0,
-                //     ),
-                //   ),
-                //   trailing: Column(
-                //     children: [
-                //       Icon(
-                //         Icons.people,
-                //         color: Colors.white,
-                //       ),
-                //       Text('${_classroom.studentNumber}', style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                //     ],
-                //   ),
-                //),
-              ),
-            );
-          },
-          itemCount: classList.length,
-        ),
-      ],
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {

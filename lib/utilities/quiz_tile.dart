@@ -36,7 +36,7 @@ class QuizTile extends StatelessWidget {
             height: 20.0,
           ),
           Text(
-            "result: ${_classroom.obtained_marks}/${_classroom.total_marks}",
+            "Average result: \n ${_classroom.obtained_marks}/${_classroom.total_marks}",
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 20.0,

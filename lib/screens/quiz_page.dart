@@ -27,7 +27,8 @@ class TeacherQuizPage extends StatefulWidget {
   final String class_name;
   final String teacher_email;
   final List<String> quiz_names;
-  const TeacherQuizPage(@required this.class_name, @required this.teacher_email,
+  final String subject_name;
+  const TeacherQuizPage(@required this.class_name, @required this.teacher_email, @required this.subject_name,
       @required this.quiz_names);
 
   @override
@@ -55,69 +56,25 @@ class _TeacherQuizPageState extends State<TeacherQuizPage> {
                 bottom: 20,
               ),
               decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/tile${index % 5}.jpg'),
+                  fit: BoxFit.cover,
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                ),
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3,
+                    color: Colors.grey.withOpacity(0.7),
+                    spreadRadius: 8,
+                    blurRadius: 10,
+                    offset: Offset(0, 3),
                   )
                 ],
               ),
               // padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/tile${index % 5}.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.8), BlendMode.dstATop),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: QuizTile(classroom: _classroom),
-                //ListTile(
-                //   contentPadding: EdgeInsets.fromLTRB(25, 35, 25, 35),
-                //   leading: Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       Icon(
-                //         Icons.people,
-                //       ),
-                //     ],
-                //   ),
-                //   title: Text(
-                //     "${_classroom.name}",
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.bold,
-                //       fontSize: 35,
-                //     ),
-                //   ),
-                //   subtitle: Text(
-                //     "${_classroom.subject}",
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.w600,
-                //       fontSize: 25.0,
-                //     ),
-                //   ),
-                //   trailing: Column(
-                //     children: [
-                //       Icon(
-                //         Icons.people,
-                //         color: Colors.white,
-                //       ),
-                //       Text('${_classroom.studentNumber}', style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                //     ],
-                //   ),
-                //),
-              ),
+              child: QuizTile(classroom: _classroom),
             );
           },
           itemCount: classList.length,
@@ -129,6 +86,13 @@ class _TeacherQuizPageState extends State<TeacherQuizPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF1B8F91),
+        title: Text(
+          widget.class_name + ' ' + widget.subject_name,
+          style: TextStyle(fontSize: 30.0),
+        ),
+      ),
       bottomNavigationBar: FABBottomAppBar(
         color: Colors.grey,
         backgroundColor: Colors.white,
@@ -250,6 +214,7 @@ class _TeacherQuizPageState extends State<TeacherQuizPage> {
                                   }
                                 }
                               }
+                              myquizLists.sort((a, b) => b.quizName.compareTo(a.quizName));
                               return QuizList(myquizLists);
                             },
                           ),

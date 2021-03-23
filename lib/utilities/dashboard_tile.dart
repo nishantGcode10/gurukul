@@ -15,9 +15,9 @@ class dashboardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
+        Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) => TeacherQuizPage(_classroom.name,
-                _classroom.teacher_email, _classroom.quiz_names)));
+                _classroom.teacher_email, _classroom.subject,_classroom.quiz_names)));
       },
       child: ListTile(
         contentPadding: EdgeInsets.fromLTRB(25, 35, 25, 20),
