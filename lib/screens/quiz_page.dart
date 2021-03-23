@@ -19,10 +19,6 @@ class teacherQuizDetails {
   });
 }
 
-class StudentId {
-  static List<String> studentIdList;
-}
-
 class TeacherQuizPage extends StatefulWidget {
   final String class_name;
   final String teacher_email;
@@ -63,12 +59,12 @@ class _TeacherQuizPageState extends State<TeacherQuizPage> {
                       Colors.black.withOpacity(0.8), BlendMode.dstATop),
                 ),
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.7),
-                    spreadRadius: 8,
-                    blurRadius: 10,
+                    spreadRadius: 5,
+                    blurRadius: 7,
                     offset: Offset(0, 3),
                   )
                 ],
@@ -181,36 +177,32 @@ class _TeacherQuizPageState extends State<TeacherQuizPage> {
                               final quizesDetails = snapshot.data.documents;
                               List<teacherQuizDetails> myquizLists = [];
                               for (var quizesDetail in quizesDetails) {
-                                print(quizesDetail.data);
-                                print("\n");
+                                // print(quizesDetail.data);
+                                // print("\n");
                                 for (var quizName in widget.quiz_names) {
-                                  print(quizName);
-                                  print("\n");
-                                  if (quizesDetail.data['quiz_id'] ==
-                                      widget.teacher_email +
-                                          '&' +
-                                          quizName +
-                                          '&' +
-                                          widget.class_name) {
+                                  // print(quizName);
+                                  // print("\n");
+                                  if (quizesDetail.data['quiz_id'] == widget.teacher_email +'&' +quizName +'&' +widget.class_name) {
                                     final quizid = quizesDetail.data['quiz_id'];
-                                    final total_marks =
-                                        quizesDetail.data['total_marks'];
-                                    final obtained_marks =
-                                        quizesDetail.data['obtained_marks'];
+                                    final total_marks =  quizesDetail.data['total_marks'];
+                                    final obtained_marks = quizesDetail.data['obtained_marks'];
                                     List<String> students_email = [];
                                     int total_students = 0;
-                                    for (var student_email
-                                        in quizesDetail.data['students']) {
-                                      students_email.add(student_email);
+                                    List<Map<String, dynamic>>studentsxMarks = [];
+                                    Map<String, dynamic> mp = Map<String, dynamic>.from(quizesDetail.data['students']);
+                                    mp.forEach((k, v){
+                                      students_email.add(k);
                                       total_students++;
-                                    }
+                                      final Map<String, dynamic> studentxmarks = {k: v};
+                                      studentsxMarks.add(studentxmarks);
+                                    });
                                     final quizInfo = new teacherQuizDetails(
                                         quizId: quizid,
                                         quizName: quizName,
                                         obtained_marks: obtained_marks,
                                         total_marks: total_marks,
                                         total_students: total_students);
-                                    myquizLists.add(quizInfo);
+                                        myquizLists.add(quizInfo);
                                   }
                                 }
                               }
