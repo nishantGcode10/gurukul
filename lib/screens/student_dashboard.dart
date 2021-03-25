@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gurukul_beta/animations/fade.dart';
-import 'package:gurukul_beta/screens/login.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'add_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gurukul_beta/utilities/signoutbutton.dart';
-import 'package:gurukul_beta/utilities/dashboard_tile.dart';
 import 'package:gurukul_beta/utilities/classroom_details.dart';
-import 'package:gurukul_beta/utilities/classroom_list.dart';
-
+import 'package:gurukul_beta/utilities/student_classroom_list.dart';
 
 class studentDetails{
   static String name = "User", email = "currUser.email";
@@ -258,12 +252,19 @@ class _StudentDashBoardPageState extends State<StudentDashBoardPage> {
                                       final subjectname = classDetail.data['subject_name'];
                                       final studentNumber = classDetail.data['total_students'];
                                       final teacherName = classDetail.data['teacher_name'];
-                                      final classroominfo = new classroomDetails(name: classname, subject: subjectname, studentNumber: studentNumber, teacherName: teacherName);
+                                      final teacherEmail = classDetail.data['teacher_email'];
+                                      List<String> quizNames = [];
+                                      for (var quizname
+                                      in classDetail.data['quiz_name']) {
+                                        quizNames.add(quizname);
+                                      }
+                                      final classroominfo = new classroomDetails(name: classname,  teacher_email: teacherEmail, subject: subjectname, studentNumber: studentNumber, teacherName: teacherName, quiz_names: quizNames);
+
                                       myclassroomList.add(classroominfo);
                                     }
                                     }
                                   }
-                                  return classroomList(myclassroomList);
+                                  return classroomList(studentDetails.email, myclassroomList);
                                 },
                               ),
                             ],

@@ -182,7 +182,7 @@ class _TeacherQuizPageState extends State<TeacherQuizPage> {
                                 for (var quizName in widget.quiz_names) {
                                   // print(quizName);
                                   // print("\n");
-                                  if (quizesDetail.data['quiz_id'] == widget.teacher_email +'&' +quizName +'&' +widget.class_name) {
+                                  if (quizesDetail.data['quiz_id'] == widget.teacher_email +'&' + quizName +'&' + widget.class_name) {
                                     final quizid = quizesDetail.data['quiz_id'];
                                     final total_marks =  quizesDetail.data['total_marks'];
                                     final obtained_marks = quizesDetail.data['obtained_marks'];
