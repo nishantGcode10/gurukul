@@ -18,7 +18,8 @@ class QuizTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
-            Icons.people,
+            Icons.assignment,
+            size: 40.0,
           ),
         ],
       ),
@@ -49,11 +50,11 @@ class QuizTile extends StatelessWidget {
         children: [
           Icon(
             Icons.people,
-            color: Colors.white,
+
           ),
           Text(
             '${_classroom.total_students}',
-            style: TextStyle(color: Colors.white, fontSize: 20.0),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
           ),
         ],
       ),

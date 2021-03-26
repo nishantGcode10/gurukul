@@ -57,7 +57,6 @@ class _HomeAppState extends State<HomeApp> {
       DeviceOrientation.portraitDown,
     ]);
     print(isLoggedIn);
-
     return MaterialApp(
       title: 'Flutter Tutorials',
       debugShowCheckedModeBanner: false,

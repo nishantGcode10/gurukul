@@ -141,7 +141,7 @@ class _loginState extends State<login> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
                                         child: TextFormField(
-                                          obscureText: true,
+                                          // obscureText: true,
                                           onChanged: (value) {
                                             pass = value;
                                           },

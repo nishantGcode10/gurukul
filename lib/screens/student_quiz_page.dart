@@ -21,7 +21,14 @@ class QuizzesDetails {
     @required this.highestmarks,
   });
 }
-
+class QuizXmarks{
+  String quizName;
+  dynamic marks;
+  QuizXmarks({
+    @required this.quizName,
+    @required this.marks,
+});
+}
 class StudentQuizPage extends StatefulWidget {
   final String className;
   final String teacherEmail;
@@ -40,6 +47,8 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   double totalPercentage=0;
   final _studentQuiz = Firestore.instance;
   double screenHeight, screenWidth;
+  //TODO: implement statistics page using this list
+  List<QuizXmarks>quizXmarks = [];
   // final _teacherQuizName = Firestore.instance;
   // ignore: non_constant_identifier_names
   Widget QuizList(
@@ -49,6 +58,8 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
       children: <Widget>[
+        mainScoreBoard(screenHeight: screenHeight, screenWidth: screenWidth, totalQuizzes: totalQuizzes, totalPercentage: totalPercentage, classRank: classRank),
+
         ListView.builder(
           padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
           physics: ClampingScrollPhysics(),
@@ -67,12 +78,13 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                       Colors.black.withOpacity(0.8), BlendMode.dstATop),
                 ),
                 color: Colors.white,
+
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.7),
-                    spreadRadius: 5,
-                    blurRadius: 7,
+                    spreadRadius:3,
+                    blurRadius: 5,
                     offset: Offset(0, 3),
                   )
                 ],
@@ -108,9 +120,9 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         notchedShape: CircularNotchedRectangle(),
         //onTabSelected: _onTapped,
         items: [
-          FABBottomAppBarItem(iconData: Icons.home, text: 'หน้าแรก'),
+          FABBottomAppBarItem(iconData: Icons.home, text: 'Home'),
           // FABBottomAppBarItem(iconData: Icons.search, text: 'ค้นหา'),
-          FABBottomAppBarItem(iconData: Icons.account_circle, text: 'โปรไฟล์'),
+          FABBottomAppBarItem(iconData: Icons.assessment_outlined, text: 'Record'),
           // FABBottomAppBarItem(iconData: Icons.more_horiz, text: 'อื่นๆ'),
         ],
       ),
@@ -121,54 +133,6 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
           physics: ClampingScrollPhysics(),
           children: [
             Container(
-              height: screenHeight*0.3,
-              width: screenWidth,
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20)),
-                          color: Color(0xFF8CD9C0),
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        height: screenHeight*0.25,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            cummulativeResult(totalQuizzes: totalQuizzes.toString(), screenWidth: screenWidth, text: 'Total Quizzes',),
-                            cummulativeResult(totalQuizzes: totalPercentage.toStringAsFixed(2)+'%', screenWidth: screenWidth, text: 'Current\nPercentage',),
-                            cummulativeResult(totalQuizzes: classRank.toString(), screenWidth: screenWidth, text: 'Class Rank',),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    top: screenHeight*0.20,
-                    left: screenWidth*0.05,
-                    right: screenWidth*0.05,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Colors.white,
-                      ),
-                      width: screenWidth*0.9,
-                      height: screenHeight*0.1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0,),
-            Container(
               padding: const EdgeInsets.only(bottom: 10, left: 5.0),
               child: ListView(
                 shrinkWrap: true,
@@ -178,8 +142,8 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                   Container(
                     padding: EdgeInsets.only(
                       bottom: 16,
-                      left: 16,
-                      right: 16,
+                      // left: 16,
+                      // right: 16,
                     ),
                     child: ListView(
                       physics: ClampingScrollPhysics(),
@@ -199,8 +163,10 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                             }
                             final quizzesDetails = snapshot.data.documents;
                             totalQuizzes=0;
+                            totalPercentage=0;
                             List<QuizzesDetails> myquizList = [
                             ];
+                            quizXmarks.clear();
                             for(var quizDetail in quizzesDetails)
                             {
                               print(quizDetail.data);
@@ -227,6 +193,8 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                                         totalstudents++;
                                         if(k==widget.studentemail){
                                           obtainedmarks = v;
+                                          final mp = new QuizXmarks(quizName: quizName, marks: v);
+                                          quizXmarks.add(mp);
                                         }
                                         final Map<String, dynamic> studentxmarks = {k: v};
                                         studentsxMarks.add(studentxmarks);
@@ -236,11 +204,14 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                                       print(totalPercentage);
                                       final quizInfo = new QuizzesDetails(quizId: quizid, quizName: quizName, obtained_marks: obtainedmarks, total_marks: totalmarks, total_students: totalstudents, highestmarks: highestmarks);
                                       myquizList.add(quizInfo);
+
                                     }
                                   }
                             }
                             totalPercentage /=totalQuizzes;
                             myquizList.sort((a, b) => b.quizName.compareTo(a.quizName));
+                            quizXmarks.sort((a, b) => b.quizName.compareTo(a.quizName));
+                            print(quizXmarks);
                             return QuizList(myquizList);
                           },
                         ),
@@ -258,6 +229,74 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         onPressed: () {},
         child: Icon(Icons.search),
         elevation: 2.0,
+      ),
+    );
+  }
+}
+
+class mainScoreBoard extends StatelessWidget {
+  const mainScoreBoard({
+    Key key,
+    @required this.screenHeight,
+    @required this.screenWidth,
+    @required this.totalQuizzes,
+    @required this.totalPercentage,
+    @required this.classRank,
+  }) : super(key: key);
+
+  final double screenHeight;
+  final double screenWidth;
+  final int totalQuizzes;
+  final double totalPercentage;
+  final int classRank;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: screenHeight*0.3,
+      width: screenWidth,
+      child: Stack(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  color: Color(0xFF8CD9C0),
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: screenHeight*0.25,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    cummulativeResult(totalQuizzes: totalQuizzes.toString(), screenWidth: screenWidth, text: 'Total Quizzes',),
+                    cummulativeResult(totalQuizzes: totalPercentage.toStringAsFixed(2)+'%', screenWidth: screenWidth, text: 'Current\nPercentage',),
+                    cummulativeResult(totalQuizzes: classRank.toString(), screenWidth: screenWidth, text: 'Class Rank',),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: screenHeight*0.20,
+            left: screenWidth*0.05,
+            right: screenWidth*0.05,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                color: Colors.white,
+              ),
+              width: screenWidth*0.9,
+              height: screenHeight*0.1,
+            ),
+          ),
+        ],
       ),
     );
   }
