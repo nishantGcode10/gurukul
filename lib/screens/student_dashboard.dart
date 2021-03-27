@@ -177,26 +177,6 @@ class _StudentDashBoardPageState extends State<StudentDashBoardPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          AddNewClass()));
-                                },
-                                icon: Icon(
-                                  Icons.add_circle_outline,
-                                  color: Color(0xff1c7bfd),
-                                ),
-                                // onPressed: () {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //         builder: (BuildContext context) =>
-                                //             AddNewClass(),
-                                //       ));
-                                // },
-                              ),
                             ],
                           ),
                         ),

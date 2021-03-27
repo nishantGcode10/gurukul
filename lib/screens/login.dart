@@ -9,7 +9,8 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'teacher_dashboard.dart';
 import 'student_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
@@ -22,7 +23,12 @@ class _loginState extends State<login> {
   String email;
   bool spin = false;
   FirebaseAuth _auth = FirebaseAuth.instance;
-
+  String errorMessage= "";
+  final _user = Firestore.instance;
+  bool isRadioCorrect = true;
+  bool isvisible = false;
+  IconData viewpass1 = CupertinoIcons.lock_open;
+  bool pass1 = true;
   void _handleRadioValueChanged(var value) {
     setState(() {
       radioValue = value;
@@ -140,18 +146,40 @@ class _loginState extends State<login> {
                                             border: Border(
                                                 bottom: BorderSide(
                                                     color: Colors.grey[200]))),
-                                        child: TextFormField(
-                                          // obscureText: true,
-                                          onChanged: (value) {
-                                            pass = value;
-                                          },
-                                          validator: passwordValidator,
-                                          decoration: InputDecoration(
-                                              hintText: "Password",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none),
-                                        ),
+                                        child: Row(
+                                        children: [Expanded(
+                                          child: TextFormField(
+                                            obscureText: pass1,
+                                            onChanged: (value) {
+                                              pass = value;
+                                            },
+                                            validator: passwordValidator,
+                                            decoration: InputDecoration(
+                                                hintText: "Password",
+                                                hintStyle:
+                                                    TextStyle(color: Colors.grey),
+                                                border: InputBorder.none),
+                                          ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                if (pass1) {
+                                                  viewpass1 =
+                                                      CupertinoIcons.lock;
+                                                  pass1 = !pass1;
+                                                } else {
+                                                  viewpass1 = CupertinoIcons
+                                                      .lock_open;
+                                                  pass1 = !pass1;
+                                                }
+                                              });
+                                            },
+                                            child: Icon(
+                                              viewpass1,
+                                            ),
+                                          ),
+                                        ]),
                                       ),
                                       Container(
                                           padding: EdgeInsets.all(10),
@@ -192,7 +220,28 @@ class _loginState extends State<login> {
                                   ),
                                 )),
                             SizedBox(
-                              height: 40,
+                              height: 10,
+                            ),
+                            Visibility(
+                              visible: isvisible,
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.clear_circled,
+                                    color: Colors.red,
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      errorMessage,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 15.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(
                               height: 40,
@@ -201,41 +250,99 @@ class _loginState extends State<login> {
                                 1.6,
                                 GestureDetector(
                                   onTap: () async {
-                                    setState(() {
-                                      spin = true;
-                                    });
                                     if (_formKey.currentState.validate()) {
+                                      setState(() {
+                                        spin = true;
+                                      });
                                       try {
                                         final user = await _auth
                                             .signInWithEmailAndPassword(
                                                 email: email, password: pass);
+                                        print(user);
                                         if (user != null) {
-                                          final SharedPreferences prefs =
+                                          final credentials = await _user.collection('teacher_credentials').getDocuments();
+                                          for(var credential in credentials.documents)
+                                            {
+                                              print(credential.data['email']);
+                                              if(credential.data['email']==email)
+                                                {
+                                                  print(credential.data['Flag']);
+                                                  if(radioValue!=credential.data['Flag'])
+                                                    {
+                                                      setState(() {
+                                                        isRadioCorrect = false;
+                                                        spin=false;
+                                                        errorMessage = "Please select the appropriate role";
+                                                        isvisible = true;
+
+                                                      });
+                                                      print("baaaad");
+                                                    }
+                                                }
+                                            }
+                                          if(isRadioCorrect)
+                                            {
+                                              final SharedPreferences prefs =
                                               await SharedPreferences
                                                   .getInstance();
-                                          prefs.setString('emailId', email);
-                                          prefs.setInt('radio', radioValue);
-                                          if (radioValue == 1) {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        TeacherDashBoardPage()));
-                                          } else if (radioValue == 0) {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        StudentDashBoardPage()));
-                                          }
+                                              prefs.setString('emailId', email);
+                                              prefs.setInt('radio', radioValue);
+                                              if (radioValue == 1) {
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                        context) =>
+                                                            TeacherDashBoardPage()));
+                                              } else if (radioValue == 0) {
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                        context) =>
+                                                            StudentDashBoardPage()));
+                                              }
+                                            }
                                         }
+                                        if(user==null)
+                                          {
+                                            print("error1");
+                                          }
                                         setState(() {
                                           spin = false;
                                         });
                                       } catch (e) {
+                                        print("error");
                                         print(e);
+                                        print("\n" + e.code);
+                                        setState(() {
+                                          switch (e.code) {
+                                            case "ERROR_INVALID_EMAIL":
+                                              errorMessage = "Your email address appears to be malformed";
+                                              break;
+                                            case "ERROR_WRONG_PASSWORD":
+                                              errorMessage = "Please enter the correct password";
+                                              break;
+                                            case "ERROR_USER_NOT_FOUND":
+                                              errorMessage = "User with this email doesn't exist";
+                                              break;
+                                            case "ERROR_USER_DISABLED":
+                                              errorMessage = "User with this email has been disabled";
+                                              break;
+                                            case "ERROR_TOO_MANY_REQUESTS":
+                                              errorMessage = "Too many requests. Try again later";
+                                              break;
+                                            case "ERROR_OPERATION_NOT_ALLOWED":
+                                              errorMessage = "Signing in with Email and Password is not enabled";
+                                              break;
+                                            default:
+                                              errorMessage = "An undefined Error happened";
+                                          }
+                                        });
+                                        setState(() {
+                                          spin = false;
+                                          isvisible = true;
+                                        });
                                       }
                                     }
                                   },

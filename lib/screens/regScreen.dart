@@ -397,10 +397,11 @@ class _RegScreenState extends State<RegScreen> {
                                 1.6,
                                 GestureDetector(
                                   onTap: () async {
-                                    setState(() {
-                                      spin = true;
-                                    });
+
                                     if (_formKey.currentState.validate()) {
+                                      setState(() {
+                                        spin = true;
+                                      });
                                       try {
                                         final newUser = await _auth
                                             .createUserWithEmailAndPassword(
@@ -442,6 +443,9 @@ class _RegScreenState extends State<RegScreen> {
                                         });
                                       } catch (e) {
                                         _showMyDialog();
+                                        setState(() {
+                                          spin = false;
+                                        });
                                       }
                                     }
                                   },
