@@ -3,7 +3,7 @@ import 'classroom_details.dart';
 import 'student_dashboard_tile.dart';
 
 Widget classroomList(
-    String studentemail, List<classroomDetails> classList,
+    String studentemail, List<classroomDetails> classList, List<String>studentsemail,
     ) {
   return ListView(
     shrinkWrap: true,
@@ -38,7 +38,7 @@ Widget classroomList(
               ],
             ),
             // padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-            child: dashboardTile(classroom: _classroom, studentemail: studentemail,),
+            child: dashboardTile(classroom: _classroom, studentemail: studentemail,studentsemail: studentsemail,),
           );
         },
         itemCount: classList.length,

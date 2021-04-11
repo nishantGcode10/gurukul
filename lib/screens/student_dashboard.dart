@@ -222,10 +222,13 @@ class _StudentDashBoardPageState extends State<StudentDashBoardPage> {
                                   final classDetails = snapshot.data.documents;
                                   List<classroomDetails> myclassroomList = [
                                   ];
+                                  List<String>studentsemail = [];
+
                                   for(var classDetail in classDetails)
                                   {
                                     for(var studentEmail in classDetail.data['student_email'])
                                     {
+                                      studentsemail.add(studentEmail);
                                       if(studentEmail==studentDetails.email)
                                     {
                                       final classname = classDetail.data['class_name'];
@@ -244,7 +247,7 @@ class _StudentDashBoardPageState extends State<StudentDashBoardPage> {
                                     }
                                     }
                                   }
-                                  return classroomList(studentDetails.email, myclassroomList);
+                                  return classroomList(studentDetails.email, myclassroomList, studentsemail);
                                 },
                               ),
                             ],

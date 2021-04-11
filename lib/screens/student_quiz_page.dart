@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'student_dashboard.dart';
 import 'package:gurukul_beta/utilities/classroom_details.dart';
 import 'package:gurukul_beta/utilities/studentQuizPageResultData.dart';
 import 'package:gurukul_beta/utilities/studentQuizTile.dart';
+
+
 class QuizzesDetails {
   final String quizId, quizName;
   final int total_students;
@@ -35,8 +38,9 @@ class StudentQuizPage extends StatefulWidget {
   final List<String> quizNames;
   final String subjectName;
   final String studentemail;
+  final List<String>studentsemail;
   const StudentQuizPage({@required this.className, @required this.teacherEmail, @required this.subjectName, @required this.studentemail,
-      @required this.quizNames});
+      @required this.quizNames, @required this.studentsemail});
 
   @override
   _StudentQuizPageState createState() => _StudentQuizPageState();
@@ -166,13 +170,16 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                             totalPercentage=0;
                             List<QuizzesDetails> myquizList = [
                             ];
+                            Map<String, dynamic> allstudentsMarks ={};
+                            // for(var names in widget.studentsemail){
+                            //   allstudentsMarks = {names: 0};
+                            // }
                             quizXmarks.clear();
                             for(var quizDetail in quizzesDetails)
                             {
                               print(quizDetail.data);
                               for(var quizName in widget.quizNames)
                                 {
-
                                   print(quizName);
                                   print(widget.teacherEmail);
                                   print(widget.className);
@@ -189,7 +196,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                                       List<Map<String, dynamic>>studentsxMarks = [];
                                       Map<String, dynamic> mp = Map<String, dynamic>.from(quizDetail.data['students']);
                                       mp.forEach((k, v){
-                                        studentsemail.add(k);
+                                        allstudentsMarks.update(k, (dynamic val) => val+v, ifAbsent: () => v);
                                         totalstudents++;
                                         if(k==widget.studentemail){
                                           obtainedmarks = v;
@@ -201,6 +208,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                                       });
                                       double percentage = (obtainedmarks*100)/totalmarks;
                                       totalPercentage += percentage;
+                                      print('total percent');
                                       print(totalPercentage);
                                       final quizInfo = new QuizzesDetails(quizId: quizid, quizName: quizName, obtained_marks: obtainedmarks, total_marks: totalmarks, total_students: totalstudents, highestmarks: highestmarks);
                                       myquizList.add(quizInfo);
@@ -208,10 +216,29 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                                     }
                                   }
                             }
-                            totalPercentage /=totalQuizzes;
-                            myquizList.sort((a, b) => b.quizName.compareTo(a.quizName));
+                            classRank=1;
+                            allstudentsMarks.forEach((key, value) {
+                              if(key!=widget.studentemail)
+                                {
+                                  print(value.runtimeType);
+                                  print(value);
+                                  double v = double.parse(value.toString());
+                                  print(v);
+                                  print(totalPercentage);
+                                  if(v>totalPercentage){
+                                    classRank = classRank+1;
+                                  }
+                                }
+                            });
+                            if(totalQuizzes!=0) {
+                              totalPercentage /= totalQuizzes;
+                            }
+                              myquizList.sort((a, b) => b.quizName.compareTo(a.quizName));
                             quizXmarks.sort((a, b) => b.quizName.compareTo(a.quizName));
                             print(quizXmarks);
+                            print(widget.studentsemail);
+
+                            print(allstudentsMarks);
                             return QuizList(myquizList);
                           },
                         ),
