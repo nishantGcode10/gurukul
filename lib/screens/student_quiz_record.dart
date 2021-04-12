@@ -1,57 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SalesData {
-  final int year;
-  final int sales;
+  final int quizNumber;
+  final int marks;
 
-  SalesData(this.year, this.sales);
+  SalesData(this.quizNumber, this.marks);
 }
-
+_getSeriesData(List<SalesData> data) {
+  List<charts.Series<SalesData, int>> series = [
+    charts.Series(
+        id: "marks",
+        data: data,
+        domainFn: (SalesData series, _) => series.quizNumber,
+        measureFn: (SalesData series, _) => series.marks,
+        colorFn: (SalesData series, _) =>
+        charts.MaterialPalette.blue.shadeDefault)
+  ];
+  return series;
+}
 class Student_quiz_record extends StatefulWidget {
+  final String className;
+  final String teacherEmail;
+  final List<String> quizNames;
+  final String subjectName;
+  final String studentemail;
+  final List<String> studentsemail;
+  const Student_quiz_record(
+      {@required this.className,
+      @required this.teacherEmail,
+      @required this.subjectName,
+      @required this.studentemail,
+      @required this.quizNames,
+      @required this.studentsemail});
   @override
   _Student_quiz_recordState createState() => _Student_quiz_recordState();
 }
 
 class _Student_quiz_recordState extends State<Student_quiz_record> {
-  final data = [
-    new SalesData(0, 1500000),
-    new SalesData(1, 1735000),
-    new SalesData(2, 1678000),
-    new SalesData(3, 1890000),
-    new SalesData(4, 1907000),
-    new SalesData(5, 2300000),
-    new SalesData(6, 2360000),
-    new SalesData(7, 1980000),
-    new SalesData(8, 2654000),
-    new SalesData(9, 2789070),
-    new SalesData(10, 3020000),
-    new SalesData(11, 3245900),
-    new SalesData(12, 4098500),
-    new SalesData(13, 4500000),
-    new SalesData(14, 4456500),
-    new SalesData(15, 3900500),
-    new SalesData(16, 5123400),
-    new SalesData(17, 5589000),
-    new SalesData(18, 5940000),
-    new SalesData(19, 6367000),
-  ];
+  final _QuizRecord = Firestore.instance;
+  List<SalesData> data = [];
+  double screenHeight, screenWidth;
 
-  _getSeriesData() {
-    List<charts.Series<SalesData, int>> series = [
-      charts.Series(
-          id: "Sales",
-          data: data,
-          domainFn: (SalesData series, _) => series.year,
-          measureFn: (SalesData series, _) => series.sales,
-          colorFn: (SalesData series, _) =>
-              charts.MaterialPalette.blue.shadeDefault)
-    ];
-    return series;
+  Widget recordStats(List<SalesData> data, double height, double width){
+    return Container(
+      height: height*0.7,
+      width: width*0.9,
+      child: stats(data: data),
+    );
   }
-
   @override
+
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -61,17 +65,83 @@ class _Student_quiz_recordState extends State<Student_quiz_record> {
             style: TextStyle(fontSize: 30.0),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: new charts.LineChart(
-                _getSeriesData(),
-                animate: true,
+        body: ListView(
+            physics: ClampingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(10, 40,10, 0),
+            shrinkWrap: true,
+            children: <Widget>[
+              // classroomList(myclassroomList),
+              StreamBuilder<QuerySnapshot>(
+                stream: _QuizRecord.collection('quizDb').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.green[800],
+                      ),
+                    );
+                  }
+                  final quizzesDetails = snapshot.data.documents;
+                  data = [];
+                  int b = 0;
+                  for (var quizDetail in quizzesDetails) {
+                    print(quizDetail.data);
+                    for (var quizName in widget.quizNames) {
+                      print(quizName);
+                      print(widget.teacherEmail);
+                      print(widget.className);
+                      if (quizDetail.data['quiz_id'] ==
+                          widget.teacherEmail +
+                              '&' +
+                              quizName +
+                              '&' +
+                              widget.className) {
+                        final quizid = quizDetail.data['quiz_id'];
+
+                        Map<String, dynamic> mp = Map<String, dynamic>.from(
+                            quizDetail.data['students']);
+                        mp.forEach((k, v) {
+                          if (k == widget.studentemail) {
+                            final mp = new SalesData(b++, v);
+                            data.add(mp);
+                          }
+                        });
+                      }
+                    }
+                  }
+                  return recordStats(data, screenHeight, screenWidth);
+                },
               ),
-            )
-          ],
-        ),
+            ]),
       ),
+    );
+  }
+}
+
+class stats extends StatelessWidget {
+  const stats({
+    Key key,
+    @required this.data,
+  }) : super(key: key);
+
+  final List<SalesData> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Your Quiz-wise Performance',
+        style: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.w700,
+        ),),
+        Expanded(
+          child: new charts.LineChart(
+            _getSeriesData(data),
+            animate: true,
+          ),
+        )
+      ],
     );
   }
 }

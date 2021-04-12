@@ -57,7 +57,14 @@ class _Student_page_viewState extends State<Student_page_view> {
             quizNames: widget.quizNames,
             studentsemail: widget.studentsemail,
           ),
-          Student_quiz_record(),
+          Student_quiz_record(
+            className: widget.className,
+            teacherEmail: widget.teacherEmail,
+            subjectName: widget.subjectName,
+            studentemail: widget.studentemail,
+            quizNames: widget.quizNames,
+            studentsemail: widget.studentsemail,
+          ),
         ],
       ),
       bottomNavigationBar: FABBottomAppBar(
