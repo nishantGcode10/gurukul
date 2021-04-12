@@ -2,7 +2,7 @@ import 'package:gurukul_beta/screens/student_quiz_page.dart';
 
 import 's2.dart';
 import 'package:flutter/material.dart';
-
+import 'student_quiz_record.dart';
 import 'package:gurukul_beta/utilities/bottomnavbar.dart';
 
 class Student_page_view extends StatefulWidget {
@@ -41,6 +41,7 @@ class _Student_page_viewState extends State<Student_page_view> {
     return SafeArea(
         child: Scaffold(
       body: PageView(
+        physics: new NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -56,7 +57,7 @@ class _Student_page_viewState extends State<Student_page_view> {
             quizNames: widget.quizNames,
             studentsemail: widget.studentsemail,
           ),
-          S2()
+          Student_quiz_record(),
         ],
       ),
       bottomNavigationBar: FABBottomAppBar(
