@@ -102,13 +102,15 @@ class _Student_quiz_recordState extends State<Student_quiz_record> {
                             quizDetail.data['students']);
                         mp.forEach((k, v) {
                           if (k == widget.studentemail) {
-                            final mp = new SalesData(b++, v);
+                            print(quizName[4]);
+                            final mp = new SalesData(int.parse(quizName[4]), v);
                             data.add(mp);
                           }
                         });
                       }
                     }
                   }
+                  data.sort((a,b)=>a.quizNumber.compareTo(b.quizNumber));
                   return recordStats(data, screenHeight, screenWidth);
                 },
               ),
@@ -139,6 +141,16 @@ class stats extends StatelessWidget {
           child: new charts.LineChart(
             _getSeriesData(data),
             animate: true,
+            behaviors: [
+              new charts.ChartTitle('Quiz Number',
+                  behaviorPosition: charts.BehaviorPosition.bottom,
+                  titleOutsideJustification:
+                  charts.OutsideJustification.middleDrawArea),
+              new charts.ChartTitle('Percentage',
+                  behaviorPosition: charts.BehaviorPosition.start,
+                  titleOutsideJustification:
+                  charts.OutsideJustification.middleDrawArea),
+            ],
           ),
         )
       ],

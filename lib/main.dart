@@ -29,7 +29,7 @@ class _HomeAppState extends State<HomeApp> {
   }
 
   bool isLoggedIn = false;
-  bool isTeacher = true;
+  bool isTeacher = false;
   void autoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('emailId');
